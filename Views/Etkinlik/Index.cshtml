@@ -1,0 +1,47 @@
+﻿@model List<Etkinlik>
+@{
+    ViewData["Title"] = "Etkinlikler";
+    var ilkEtkinlik = Model.FirstOrDefault();
+}
+<section class="events-section" style="padding: 60px 0; min-height: 60vh;">
+    <div class="container">
+        <div class="section-title"><h2>Tüm Etkinliklerimiz</h2></div>
+        @if (Model.Any())
+        {
+            <div class="events-showcase">
+                <div class="event-poster">
+                    <img src="@(ilkEtkinlik?.AfisGorseli ?? "/gorseller/sliders/1.png")" alt="Etkinlik Afisi" id="activePoster">
+                </div>
+                <div class="events-list">
+                    @foreach (var etkinlik in Model)
+                    {
+                        <a asp-controller="Etkinlik" asp-action="Detay" asp-route-id="@etkinlik.Id"
+                           class="event-item @(etkinlik == ilkEtkinlik ? "active" : "")"
+                           data-poster="@etkinlik.AfisGorseli">
+                            <div class="event-date-badge">
+                                @if (etkinlik.Tarih.HasValue)
+                                {
+                                    <span class="day">@etkinlik.Tarih.Value.Day</span>
+                                    <span class="month">@etkinlik.Tarih.Value.ToString("MMM")</span>
+                                }
+                                else { <span class="day">?</span><span class="month">Tarih</span> }
+                            </div>
+                            <div class="event-details">
+                                <h3>@etkinlik.Baslik</h3>
+                                @if (!string.IsNullOrEmpty(etkinlik.Saat)) { <p><i class="fas fa-clock"></i> @etkinlik.Saat</p> }
+                                @if (!string.IsNullOrEmpty(etkinlik.Konum)) { <p><i class="fas fa-map-marker-alt"></i> @etkinlik.Konum</p> }
+                            </div>
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div style="text-align:center; padding: 60px; color: var(--text-muted);">
+                <i class="fas fa-calendar-times" style="font-size: 4rem; margin-bottom: 20px;"></i>
+                <p>Henüz etkinlik bulunmamaktadır.</p>
+            </div>
+        }
+    </div>
+</section>

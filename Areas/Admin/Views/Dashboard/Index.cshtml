@@ -1,0 +1,46 @@
+﻿@model AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+<div class="stat-grid">
+    <div class="stat-card">
+        <div class="stat-icon orange"><i class="fas fa-calendar-alt"></i></div>
+        <div class="stat-info"><h3>@Model.ToplamEtkinlik</h3><p>Etkinlik</p></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon blue"><i class="fas fa-graduation-cap"></i></div>
+        <div class="stat-info"><h3>@Model.ToplamEgitim</h3><p>Eğitim</p></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-users"></i></div>
+        <div class="stat-info"><h3>@Model.ToplamEkipUyesi</h3><p>Ekip Üyesi</p></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon purple"><i class="fas fa-book"></i></div>
+        <div class="stat-info"><h3>@Model.ToplamYayin</h3><p>Yayın</p></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon red"><i class="fas fa-envelope"></i></div>
+        <div class="stat-info"><h3>@Model.OkunmamisMesaj</h3><p>Okunmamış Mesaj</p></div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon teal"><i class="fas fa-images"></i></div>
+        <div class="stat-info"><h3>@Model.ToplamGaleri</h3><p>Galeri Görseli</p></div>
+    </div>
+</div>
+
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h3><i class="fas fa-bolt" style="color:var(--admin-accent);"></i> Hızlı İşlemler</h3>
+    </div>
+    <div style="display:flex; flex-wrap:wrap; gap:12px;">
+        <a asp-area="Admin" asp-controller="Etkinlik" asp-action="Ekle" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Etkinlik Ekle</a>
+        <a asp-area="Admin" asp-controller="Egitim" asp-action="Ekle" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Eğitim Ekle</a>
+        <a asp-area="Admin" asp-controller="Yayin" asp-action="Ekle" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Yayın Ekle</a>
+        <a asp-area="Admin" asp-controller="Ekip" asp-action="Ekle" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Ekip Üyesi Ekle</a>
+        <a asp-area="Admin" asp-controller="Slider" asp-action="Ekle" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Slider Ekle</a>
+        <a asp-area="Admin" asp-controller="Iletisim" asp-action="Index" class="btn-admin btn-admin-edit">
+            <i class="fas fa-envelope"></i> Mesajlar (@Model.OkunmamisMesaj yeni)
+        </a>
+    </div>
+</div>

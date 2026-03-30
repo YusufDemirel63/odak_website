@@ -1,0 +1,26 @@
+﻿@model List<EkipUyesi>
+@{ViewData["Title"] = "Ekip Uyeleri";}
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h3><i class="fas fa-users" style="color:var(--admin-accent);"></i> Ekip Uyeleri</h3>
+        <a asp-action="Ekle" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Uye Ekle</a>
+    </div>
+    <table class="admin-table">
+        <thead><tr><th>Ad Soyad</th><th>Gorev</th><th>Birim</th><th>Sira</th><th>Durum</th><th>Islem</th></tr></thead>
+        <tbody>
+            @foreach (var u in Model) {
+                <tr>
+                    <td>@u.AdSoyad</td><td>@(u.Gorev??"-")</td><td>@(u.Birim??"-")</td><td>@u.Sira</td>
+                    <td><span class="@(u.Aktif?"badge-aktif":"badge-pasif")">@(u.Aktif?"Aktif":"Pasif")</span></td>
+                    <td style="display:flex;gap:8px;">
+                        <a asp-action="Duzenle" asp-route-id="@u.Id" class="btn-admin btn-admin-edit"><i class="fas fa-edit"></i></a>
+                        <form asp-action="Sil" method="post" onsubmit="return confirm('Silinsin mi?')">
+                            @Html.AntiForgeryToken()<input type="hidden" name="id" value="@u.Id">
+                            <button type="submit" class="btn-admin btn-admin-delete"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Odak Admin</title>
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --sidebar-w: 260px; --header-h: 65px; --admin-primary: #003054; --admin-accent: #f15a39; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Poppins',sans-serif; background:#f0f2f5; display:flex; min-height:100vh; }
+
+        /* SIDEBAR */
+        .admin-sidebar { width:var(--sidebar-w); background:var(--admin-primary); position:fixed; top:0; left:0; height:100vh; overflow-y:auto; z-index:100; display:flex; flex-direction:column; }
+        .sidebar-brand { padding:25px 20px; border-bottom:1px solid rgba(255,255,255,0.1); }
+        .sidebar-brand img { height:50px; filter:brightness(0) invert(1); }
+        .sidebar-brand span { display:block; color:rgba(255,255,255,0.6); font-size:0.75rem; margin-top:5px; letter-spacing:1px; }
+        .sidebar-nav { padding:20px 0; flex:1; }
+        .sidebar-section { padding:8px 20px; color:rgba(255,255,255,0.4); font-size:0.7rem; text-transform:uppercase; letter-spacing:2px; margin-top:10px; }
+        .sidebar-nav a { display:flex; align-items:center; gap:12px; padding:12px 20px; color:rgba(255,255,255,0.75); text-decoration:none; font-size:0.9rem; transition:all 0.3s; }
+        .sidebar-nav a:hover, .sidebar-nav a.active { background:rgba(255,255,255,0.1); color:#fff; border-left:3px solid var(--admin-accent); padding-left:17px; }
+        .sidebar-nav a i { width:20px; text-align:center; font-size:1rem; }
+        .sidebar-footer { padding:20px; border-top:1px solid rgba(255,255,255,0.1); }
+        .sidebar-footer a { display:flex; align-items:center; gap:10px; color:rgba(255,255,255,0.6); text-decoration:none; font-size:0.85rem; transition:color 0.3s; }
+        .sidebar-footer a:hover { color:#fff; }
+
+        /* MAIN CONTENT */
+        .admin-main { margin-left:var(--sidebar-w); flex:1; display:flex; flex-direction:column; }
+        .admin-header { height:var(--header-h); background:#fff; border-bottom:1px solid #e9ecef; display:flex; align-items:center; justify-content:space-between; padding:0 30px; position:sticky; top:0; z-index:50; box-shadow:0 2px 10px rgba(0,0,0,0.05); }
+        .admin-header h1 { font-size:1.2rem; color:var(--admin-primary); font-weight:600; }
+        .admin-header-right { display:flex; align-items:center; gap:15px; }
+        .admin-badge { background:var(--admin-accent); color:#fff; padding:4px 12px; border-radius:20px; font-size:0.8rem; }
+        .admin-content { padding:30px; flex:1; }
+
+        /* CARDS */
+        .admin-card { background:#fff; border-radius:12px; padding:25px; box-shadow:0 2px 10px rgba(0,0,0,0.06); margin-bottom:25px; }
+        .admin-card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; padding-bottom:15px; border-bottom:1px solid #f0f2f5; }
+        .admin-card-header h3 { font-size:1.1rem; color:var(--admin-primary); font-weight:600; }
+
+        /* TABLE */
+        .admin-table { width:100%; border-collapse:collapse; }
+        .admin-table th { background:#f8f9fa; padding:12px 15px; text-align:left; font-size:0.85rem; color:#495057; font-weight:600; border-bottom:2px solid #e9ecef; }
+        .admin-table td { padding:12px 15px; border-bottom:1px solid #f0f2f5; font-size:0.9rem; color:#495057; vertical-align:middle; }
+        .admin-table tr:hover td { background:#fafafa; }
+
+        /* BUTTONS */
+        .btn-admin { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:500; text-decoration:none; border:none; cursor:pointer; transition:all 0.3s; font-family:inherit; }
+        .btn-admin-primary { background:var(--admin-accent); color:#fff; }
+        .btn-admin-primary:hover { background:#d4412a; }
+        .btn-admin-edit { background:#e3f2fd; color:#1565c0; }
+        .btn-admin-edit:hover { background:#1565c0; color:#fff; }
+        .btn-admin-delete { background:#fce4e4; color:#c62828; }
+        .btn-admin-delete:hover { background:#c62828; color:#fff; }
+        .btn-admin-success { background:#e8f5e9; color:#2e7d32; }
+        .btn-admin-success:hover { background:#2e7d32; color:#fff; }
+
+        /* FORM */
+        .admin-form .form-group { margin-bottom:20px; }
+        .admin-form label { display:block; margin-bottom:6px; font-size:0.9rem; color:var(--admin-primary); font-weight:500; }
+        .admin-form input, .admin-form textarea, .admin-form select { width:100%; padding:10px 14px; border:2px solid #e9ecef; border-radius:8px; font-family:inherit; font-size:0.95rem; transition:border-color 0.3s; }
+        .admin-form input:focus, .admin-form textarea:focus, .admin-form select:focus { outline:none; border-color:var(--admin-accent); }
+        .admin-form textarea { min-height:120px; resize:vertical; }
+
+        /* BADGE STATUS */
+        .badge-aktif { background:#d4edda; color:#155724; padding:3px 10px; border-radius:20px; font-size:0.78rem; }
+        .badge-pasif { background:#f8d7da; color:#721c24; padding:3px 10px; border-radius:20px; font-size:0.78rem; }
+
+        /* ALERT */
+        .alert-success { background:#d4edda; color:#155724; padding:14px 18px; border-radius:8px; margin-bottom:20px; font-size:0.9rem; }
+
+        /* STAT CARDS */
+        .stat-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:20px; margin-bottom:30px; }
+        .stat-card { background:#fff; border-radius:12px; padding:25px; box-shadow:0 2px 10px rgba(0,0,0,0.06); display:flex; align-items:center; gap:20px; }
+        .stat-icon { width:55px; height:55px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; color:#fff; flex-shrink:0; }
+        .stat-icon.orange { background:linear-gradient(135deg, #f15a39, #ff8c69); }
+        .stat-icon.blue { background:linear-gradient(135deg, #003054, #0066a6); }
+        .stat-icon.green { background:linear-gradient(135deg, #28a745, #5cb85c); }
+        .stat-icon.red { background:linear-gradient(135deg, #dc3545, #e36574); }
+        .stat-icon.purple { background:linear-gradient(135deg, #6f42c1, #9165d4); }
+        .stat-icon.teal { background:linear-gradient(135deg, #17a2b8, #3dbdd4); }
+        .stat-info h3 { font-size:1.8rem; font-weight:700; color:var(--admin-primary); line-height:1; }
+        .stat-info p { font-size:0.8rem; color:#6c757d; margin-top:4px; }
+
+        @@media(max-width:768px) {
+            .admin-sidebar { transform:translateX(-100%); }
+            .admin-main { margin-left:0; }
+        }
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+        <div class="sidebar-brand">
+            <img src="/gorseller/OdakLogo.svg" alt="Odak Logo">
+            <span>YÖNETİM PANELİ</span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="sidebar-section">Genel</div>
+            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+
+            <div class="sidebar-section">İçerik & Kulüpler</div>
+                                                <a asp-area="Admin" asp-controller="KulupYonetimi" asp-action="Index">
+                                                    <i class="fas fa-users-cog"></i> Kulüp Yönetimi
+                                                </a>
+                                                <a asp-area="Admin" asp-controller="KurumsalIcerik" asp-action="Index">
+                                                    <i class="fas fa-align-left"></i> Kurumsal Metinler
+                                                </a>
+                                                
+            <div class="sidebar-section">Medya</div>
+            <a asp-area="Admin" asp-controller="Slider" asp-action="Index">
+                <i class="fas fa-images"></i> Slider Görselleri
+            </a>
+            <a asp-area="Admin" asp-controller="Etkinlik" asp-action="Index">
+                <i class="fas fa-calendar-alt"></i> Etkinlikler
+            </a>
+            <a asp-area="Admin" asp-controller="Egitim" asp-action="Index">
+                <i class="fas fa-graduation-cap"></i> Eğitimler
+            </a>
+            <a asp-area="Admin" asp-controller="Yayin" asp-action="Index">
+                <i class="fas fa-book"></i> Yayınlar
+            </a>
+            <a asp-area="Admin" asp-controller="Galeri" asp-action="Index">
+                <i class="fas fa-photo-video"></i> Galeri
+            </a>
+
+            <div class="sidebar-section">Kurumsal</div>
+            <a asp-area="Admin" asp-controller="Ekip" asp-action="Index">
+                <i class="fas fa-users"></i> Ekip Üyeleri
+            </a>
+            <a asp-area="Admin" asp-controller="Iletisim" asp-action="Index">
+                <i class="fas fa-envelope"></i> Mesajlar
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="/" target="_blank"><i class="fas fa-external-link-alt"></i> Siteyi Görüntüle</a>
+            <a asp-area="Admin" asp-controller="Auth" asp-action="Cikis" style="margin-top:10px;">
+                <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+        <header class="admin-header">
+            <h1>@ViewData["Title"]</h1>
+            <div class="admin-header-right">
+                <span class="admin-badge"><i class="fas fa-user-shield"></i> @@Context.Session.GetString("AdminAdi")</span>
+            </div>
+        </header>
+        <div class="admin-content">
+            @if (TempData["Mesaj"] != null)
+            {
+                <div class="alert-success"><i class="fas fa-check-circle"></i> @TempData["Mesaj"]</div>
+            }
+            @RenderBody()
+        </div>
+    </main>
+
+    <script src="~/js/site.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+

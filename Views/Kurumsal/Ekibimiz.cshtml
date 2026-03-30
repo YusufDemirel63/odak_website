@@ -1,0 +1,33 @@
+﻿@model List<EkipUyesi>
+@{
+    ViewData["Title"] = "Ekibimiz";
+}
+<section class="page-header" style="background: linear-gradient(rgba(0,48,84,0.85), rgba(0,48,84,0.95)), url('/gorseller/sliders/1.png'); background-size:cover; background-position:center; padding: 80px 0; text-align: center;">
+    <div class="container">
+        <h1 style="color:#fff; font-size: 2.5rem; margin-bottom: 15px;">Ekibimiz</h1>
+        <p style="color: rgba(255,255,255,0.85); font-size: 1.1rem;">Odak Düşünce Kulübü'nün vizyonunu şekillendiren kadromuz.</p>
+    </div>
+</section>
+
+<section class="team-hierarchy" style="padding: 60px 0;">
+    <div class="container">
+        <div class="org-grid">
+            @foreach (var uye in Model.OrderBy(e => e.Sira))
+            {
+                <div class="org-card" style="margin-bottom:20px;">
+                    <div class="org-img">
+                        @if (!string.IsNullOrEmpty(uye.FotografYolu))
+                        {
+                            <img src="@uye.FotografYolu" alt="@uye.AdSoyad" style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
+                        }
+                        else { <i class="fas fa-user" style="font-size:3rem; padding: 30px 0;"></i> }
+                    </div>
+                    <div class="org-info" style="text-align:center; padding-top:10px;">
+                        <h3 style="font-size:1.1rem; color:var(--text-dark);">@uye.AdSoyad</h3>
+                        <p style="font-size:0.85rem; color:var(--text-muted);">@uye.Gorev</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

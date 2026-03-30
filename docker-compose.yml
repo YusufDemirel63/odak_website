@@ -1,0 +1,39 @@
+﻿version: '3.8'
+
+services:
+  odak_db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: odak_db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=OdakProdPass2026!
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - odak_sql_data:/var/opt/mssql
+    restart: unless-stopped
+    networks:
+      - odak_net
+
+  odak_web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: odak_web
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - "80:8080"
+    depends_on:
+      - odak_db
+    restart: unless-stopped
+    networks:
+      - odak_net
+
+networks:
+  odak_net:
+    driver: bridge
+
+volumes:
+  odak_sql_data:

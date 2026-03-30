@@ -1,0 +1,26 @@
+﻿@model EkipUyesi
+@{ViewData["Title"] = Model.Id==0?"Uye Ekle":"Uye Duzenle"; var isEdit=Model.Id!=0;}
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h3><i class="fas fa-user-plus" style="color:var(--admin-accent);"></i> @ViewData["Title"]</h3>
+        <a asp-action="Index" class="btn-admin btn-admin-edit"><i class="fas fa-arrow-left"></i> Geri</a>
+    </div>
+    <form asp-action="@(isEdit?"Duzenle":"Ekle")" method="post" enctype="multipart/form-data" class="admin-form">
+        @Html.AntiForgeryToken()
+        @if(isEdit){<input type="hidden" asp-for="Id">}
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+            <div class="form-group"><label>Ad Soyad *</label><input asp-for="AdSoyad"></div>
+            <div class="form-group"><label>Gorev</label><input asp-for="Gorev" placeholder="Kurup Baskani, Uye..."></div>
+            <div class="form-group"><label>Birim</label><input asp-for="Birim" placeholder="Medya, Egitim..."></div>
+            <div class="form-group"><label>Sira</label><input asp-for="Sira" type="number" min="0"></div>
+            <div class="form-group"><label>E-posta</label><input asp-for="Email" type="email"></div>
+            <div class="form-group"><label>LinkedIn URL</label><input asp-for="LinkedInUrl" type="url"></div>
+            <div class="form-group"><label>Twitter URL</label><input asp-for="TwitterUrl" type="url"></div>
+        </div>
+        <div class="form-group"><label>Fotograf</label><input type="file" name="fotografFile" accept="image/*">
+            @if(!string.IsNullOrEmpty(Model.FotografYolu)){<img src="@Model.FotografYolu" style="height:60px;margin-top:8px;border-radius:50%;"><input type="hidden" asp-for="FotografYolu">}
+        </div>
+        <div class="form-group" style="display:flex;align-items:center;gap:10px;"><input asp-for="Aktif" type="checkbox" style="width:auto;margin:0;"><label asp-for="Aktif" style="margin:0;">Aktif</label></div>
+        <button type="submit" class="btn-admin btn-admin-primary" style="padding:12px 30px;font-size:1rem;"><i class="fas fa-save"></i> @(isEdit?"Guncelle":"Kaydet")</button>
+    </form>
+</div>

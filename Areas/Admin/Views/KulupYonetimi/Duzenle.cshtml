@@ -1,0 +1,25 @@
+﻿@model Kulup
+@{ViewData["Title"] = Model.Id == 0 ? "Yeni Kulup" : "Kulup Duzenle"; var isEdit = Model.Id != 0;}
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h3><i class="fas fa-users" style="color:var(--admin-accent);"></i> @ViewData["Title"]</h3>
+        <a asp-action="Index" class="btn-admin btn-admin-edit"><i class="fas fa-arrow-left"></i> Geri</a>
+    </div>
+    <form asp-action="@(isEdit ? "Duzenle" : "Ekle")" method="post" enctype="multipart/form-data" class="admin-form">
+        @Html.AntiForgeryToken()
+        @if (isEdit) { <input type="hidden" asp-for="Id"> }
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
+            <div class="form-group"><label>Kulup Adi *</label><input asp-for="Ad"></div>
+            <div class="form-group"><label>Ikon (FontAwesome fas fa-x)</label><input asp-for="Icon"></div>
+            <div class="form-group"><label>Sira</label><input asp-for="Sira" type="number" min="0"></div>
+        </div>
+        <div class="form-group"><label>Kisa Aciklama (Ana sayfada cikacak)</label><textarea asp-for="KisaAciklama" style="min-height:80px;"></textarea></div>
+        <div class="form-group"><label>Uzun Aciklama (Detay sayfada cikacak)</label><textarea asp-for="UzunAciklama" style="min-height:150px;"></textarea></div>
+        
+        <div class="form-group"><label>Kulup Gorseli (Opsiyonel)</label><input type="file" name="gorselFile" accept="image/*">
+            @if (!string.IsNullOrEmpty(Model.GorselYolu)) { <img src="@Model.GorselYolu" style="height:60px;margin-top:8px;border-radius:4px;"> <input type="hidden" asp-for="GorselYolu"> }
+        </div>
+        <div class="form-group" style="display:flex;align-items:center;gap:10px;"><input asp-for="Aktif" type="checkbox" style="width:auto;margin:0;"><label asp-for="Aktif" style="margin:0;">Aktif</label></div>
+        <button type="submit" class="btn-admin btn-admin-primary" style="padding:12px 30px;font-size:1rem;"><i class="fas fa-save"></i> @(isEdit ? "Guncelle" : "Kaydet")</button>
+    </form>
+</div>

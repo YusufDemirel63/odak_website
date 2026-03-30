@@ -1,0 +1,18 @@
+﻿@model GaleriGorseli
+@{ViewData["Title"] = "Gorsel Ekle";}
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h3><i class="fas fa-file-image" style="color:var(--admin-accent);"></i> Galeriye Gorsel Ekle</h3>
+        <a asp-action="Index" class="btn-admin btn-admin-edit"><i class="fas fa-arrow-left"></i> Geri</a>
+    </div>
+    <form asp-action="Ekle" method="post" enctype="multipart/form-data" class="admin-form">
+        @Html.AntiForgeryToken()
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+            <div class="form-group"><label>Gorsel(ler) * (Çoklu Seçebilirsiniz)</label><input type="file" name="gorselFiles" accept="image/*" multiple required></div>
+            <div class="form-group"><label>Baslik (Opsiyonel)</label><input asp-for="Baslik"></div>
+            <div class="form-group"><label>Etkinlik Adi (Opsiyonel)</label><input asp-for="EtkinlikAdi"></div>
+            <div class="form-group"><label>Tarih</label><input asp-for="Tarih" type="date"></div>
+        </div>
+        <button type="submit" class="btn-admin btn-admin-primary" style="padding:12px 30px;font-size:1rem;"><i class="fas fa-upload"></i> Gorselleri Yukle</button>
+    </form>
+</div>

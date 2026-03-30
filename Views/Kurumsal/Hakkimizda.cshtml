@@ -1,0 +1,25 @@
+﻿@model OdakMVC.Models.Entities.IcerikSayfasi
+@{
+    ViewData["Title"] = Model?.Baslik ?? "Hakkımızda";
+}
+<section class="page-header" style="background: linear-gradient(rgba(0,48,84,0.85), rgba(0,48,84,0.95)), url('@(Model?.GorselYolu ?? "/gorseller/sliders/1.png")'); background-size:cover; background-position:center; padding: 80px 0; text-align: center;">
+    <div class="container">
+        <h1 style="color:#fff; font-size: 2.5rem; margin-bottom: 15px;">@ViewData["Title"]</h1>
+        <p style="color: rgba(255,255,255,0.85); font-size: 1.1rem;">Zihinsel gelişim ve toplumsal farkındalık... Odak noktası.</p>
+    </div>
+</section>
+
+<section class="about-content" style="padding: 60px 0; min-height: 50vh;">
+    <div class="container">
+        @if(Model != null)
+        {
+            <div style="font-size:1.1rem; line-height:1.8; color:var(--text-dark); background:#fff; padding:40px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.05);">
+                @Html.Raw(Model.Icerik.Replace("\n", "<br/>"))
+            </div>
+        }
+        else
+        {
+            <p style="text-align:center;">Icerik bulunamadi.</p>
+        }
+    </div>
+</section>

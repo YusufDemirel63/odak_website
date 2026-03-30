@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="@ViewData["Description"] ?? "Odak Düşünce Kulübü; gençlerin zihinsel gelişimine katkıda bulunan okuma, düşünme, araştırma ve keşfetme odaklı bir sivil toplum inisiyatifidir."">
+    <meta name="keywords" content="Odak, Düşünce Kulübü, Oku, Düşün, Araştır, Keşfet, Sivil Toplum, Eğitim, Gençlik">
+    <meta name="author" content="Odak Düşünce Kulübü">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="@(ViewData["Title"] ?? "Odak Düşünce Kulübü") | Oku, Düşün, Araştır, Keşfet">
+    <meta property="og:description" content="Zihinsel gelişim ve toplumsal farkındalık için doğru odak noktasındasınız.">
+    <meta property="og:image" content="/gorseller/OdakLogo.svg">
+    <meta property="og:url" content="https://odakdusuncekulubu.com/">
+    <meta property="og:type" content="website">
+
+    <title>@(ViewData["Title"] ?? "Odak Düşünce Kulübü") | Oku, Düşün, Araştır, Keşfet</title>
+
+    <link rel="icon" type="image/svg+xml" href="/gorseller/OdakLogo.svg">
+    <link rel="canonical" href="https://odakdusuncekulubu.com/">
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+@inject OdakMVC.Data.OdakDbContext _context
+<body>
+    <!-- HEADER -->
+    <header class="row">
+        <div class="col-12 header-container">
+            <div class="col-4 header-left">
+                <a href="mailto:odakdusuncekulubu@gmail.com" class="header-email">
+                    <i class="fas fa-envelope"></i>
+                    <span>odakdusuncekulubu@gmail.com</span>
+                </a>
+            </div>
+            <div class="col-4 header-center">
+                <p class="header-slogan">Oku, Düşün, Araştır, Keşfet</p>
+            </div>
+            <div class="col-4 header-right">
+                <a href="https://www.instagram.com/odakdusuncekulubu/" title="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://x.com/odakdusunceklb" title="X (Twitter)" target="_blank"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.youtube.com/@@odakdusuncekulubu" title="YouTube" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.facebook.com/people/Odak-Kul%C3%BCb%C3%BC/pfbid0tw6mVHQTte16a38mhcEKpLSfLPZxk76HoAaC59HfS7mTmc8tefmSuUEAmfyNDbVwl/" title="Facebook" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="https://nsosyal.com/odakdusuncekulubu" title="NSosyal" target="_blank"><img src="/gorseller/NSosyalLogo.svg" alt="NSosyal"></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a asp-controller="Home" asp-action="Index">
+                    <img src="/gorseller/OdakLogo.svg" alt="Odak Logo">
+                </a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Menü">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a asp-controller="Home" asp-action="Index" class="nav-link">Ana Sayfa</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">Kurumsal <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a asp-controller="Kurumsal" asp-action="Hakkimizda">Hakkımızda</a></li>
+                        <li><a asp-controller="Kurumsal" asp-action="VizyonMisyon">Vizyon &amp; Misyon</a></li>
+                        <li><a asp-controller="Kurumsal" asp-action="Ekibimiz">Ekibimiz</a></li>
+                        <li><a asp-controller="Iletisim" asp-action="Index">İletişim</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">Kulüpler <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        @foreach(var k in _context.Kulupler.Where(k => k.Aktif).OrderBy(k => k.Sira)) {
+                            <li><a asp-controller="Kulupler" asp-action="Detay" asp-route-id="@k.Id">@k.Ad Kulübü</a></li>
+                        }
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Egitim" asp-action="Index" class="nav-link">Eğitimler</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">Etkinlikler <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a asp-controller="Etkinlik" asp-action="Index">Güncel Etkinlikler</a></li>
+                        <li><a asp-controller="Etkinlik" asp-action="Kareler">Etkinliklerden Kareler</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">Yayınlar <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a asp-controller="Yayin" asp-action="Kitaplar">Kitaplar</a></li>
+                        <li><a asp-controller="Yayin" asp-action="Raporlar">Raporlar</a></li>
+                        <li><a asp-controller="Yayin" asp-action="Makaleler">Makaleler</a></li>
+                        <li><a asp-controller="Yayin" asp-action="Bultenler">Bültenler</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Iletisim" asp-action="Index" class="nav-link">İletişim</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- SAYFA İÇERİĞİ -->
+    @RenderBody()
+
+    <!-- WhatsApp Butonu -->
+    <a href="https://wa.me/905522722563" class="whatsapp-btn" target="_blank" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Yukarı Çık Butonu -->
+    <a href="#" class="scroll-top-btn" aria-label="Yukarı Çık">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>ODAK</h4>
+                    <p>Zihinsel gelişim ve toplumsal farkındalık için doğru odak noktasındasınız. Bizi takip etmeye devam edin.</p>
+                    <div style="margin-top: 15px; display: flex; gap: 15px;">
+                        <a href="https://www.instagram.com/odakdusuncekulubu/" style="color: #fff; font-size: 1.3rem;" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://x.com/odakdusunceklb" style="color: #fff; font-size: 1.3rem;" target="_blank" title="X (Twitter)"><i class="fab fa-x-twitter"></i></a>
+                        <a href="https://www.youtube.com/@@odakdusuncekulubu" style="color: #fff; font-size: 1.3rem;" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/people/Odak-Kul%C3%BCb%C3%BC/pfbid0tw6mVHQTte16a38mhcEKpLSfLPZxk76HoAaC59HfS7mTmc8tefmSuUEAmfyNDbVwl/" style="color: #fff; font-size: 1.3rem;" target="_blank" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="https://nsosyal.com/odakdusuncekulubu" style="color: #fff; font-size: 1.3rem;" target="_blank" title="NSosyal"><img src="/gorseller/NSosyalLogo.svg" alt="NSosyal" style="height: 1.3rem; filter: brightness(0) invert(1);"></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Hızlı Menü</h4>
+                    <ul>
+                        <li><a asp-controller="Home" asp-action="Index">Ana Sayfa</a></li>
+                        <li><a asp-controller="Kurumsal" asp-action="Hakkimizda">Hakkımızda</a></li>
+                        <li><a asp-controller="Etkinlik" asp-action="Index">Etkinlikler</a></li>
+                        <li><a asp-controller="Egitim" asp-action="Index">Eğitimler</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Kategoriler</h4>
+                    <ul>
+                        <li><a asp-controller="Yayin" asp-action="Kitaplar">Kitaplar</a></li>
+                        <li><a asp-controller="Yayin" asp-action="Makaleler">Makaleler</a></li>
+                        <li><a asp-controller="Yayin" asp-action="Raporlar">Raporlar</a></li>
+                        <li><a asp-controller="Yayin" asp-action="Bultenler">Bültenler</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Bize Ulaşın</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> Adana, Türkiye</p>
+                    <p><i class="fas fa-envelope"></i> odakdusuncekulubu@gmail.com</p>
+                    <p><i class="fas fa-phone"></i> +90 552 272 25 63</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; @DateTime.Now.Year Odak Düşünce Kulübü. Tüm Hakları Saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/js/site.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+

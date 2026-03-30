@@ -1,0 +1,22 @@
+﻿@model IcerikSayfasi
+@{ViewData["Title"] = "Icerik Duzenle: " + Model.Anahtar;}
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h3><i class="fas fa-edit" style="color:var(--admin-accent);"></i> @Model.Anahtar - Sayfasi</h3>
+        <a asp-action="Index" class="btn-admin btn-admin-edit"><i class="fas fa-arrow-left"></i> Geri</a>
+    </div>
+    <form asp-action="Duzenle" method="post" enctype="multipart/form-data" class="admin-form">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id">
+        <input type="hidden" asp-for="Anahtar">
+        <div class="form-group"><label>Sayfa Görünen Baslik *</label><input asp-for="Baslik"></div>
+        <div class="form-group">
+            <label>Metin Icerigi * (HTML destekler. Paragraf aralarina Enter ile / veya <br/> ile boşluk birakabilirsiniz.)</label>
+            <textarea asp-for="Icerik" style="min-height:300px;font-family:monospace;"></textarea>
+        </div>
+        <div class="form-group"><label>Gorsel (Opsiyonel)</label><input type="file" name="gorselFile" accept="image/*">
+            @if (!string.IsNullOrEmpty(Model.GorselYolu)) { <img src="@Model.GorselYolu" style="height:100px;margin-top:8px;border-radius:4px;"> <input type="hidden" asp-for="GorselYolu"> }
+        </div>
+        <button type="submit" class="btn-admin btn-admin-primary" style="padding:12px 30px;font-size:1rem;"><i class="fas fa-save"></i> Guncelle</button>
+    </form>
+</div>

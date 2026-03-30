@@ -1,0 +1,38 @@
+﻿@model EtkinlikDetayViewModel
+@{
+    ViewData["Title"] = Model.Etkinlik.Baslik;
+}
+<section style="padding: 60px 0; min-height: 60vh;">
+    <div class="container">
+        <div class="section-title"><h2>Etkinlik Detayı</h2></div>
+        <div style="display:flex; flex-wrap:wrap; gap:40px; margin-bottom:40px;">
+            <div style="flex:1; min-width:300px;">
+                @if (!string.IsNullOrEmpty(Model.Etkinlik.AfisGorseli))
+                {
+                    <img src="@Model.Etkinlik.AfisGorseli" alt="@Model.Etkinlik.Baslik" style="width:100%; border-radius:10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                }
+            </div>
+            <div style="flex:2; min-width:300px;">
+                <h3 style="margin-bottom:20px; font-size:28px; color:var(--primary-color);">@Model.Etkinlik.Baslik</h3>
+                <div style="margin-bottom:20px; font-size:16px; color:#555;">
+                    @if (Model.Etkinlik.Tarih.HasValue)
+                    {
+                        <p style="margin-bottom:10px;"><i class="fas fa-calendar-alt" style="color:var(--primary-color); width:25px;"></i> <strong>Tarih:</strong> @Model.Etkinlik.Tarih.Value.ToString("dd MMMM yyyy")</p>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Etkinlik.Saat))
+                    {
+                        <p style="margin-bottom:10px;"><i class="fas fa-clock" style="color:var(--primary-color); width:25px;"></i> <strong>Saat:</strong> @Model.Etkinlik.Saat</p>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Etkinlik.Konum))
+                    {
+                        <p style="margin-bottom:10px;"><i class="fas fa-map-marker-alt" style="color:var(--primary-color); width:25px;"></i> <strong>Yer:</strong> @Model.Etkinlik.Konum</p>
+                    }
+                </div>
+                @if (!string.IsNullOrEmpty(Model.Etkinlik.Aciklama))
+                {
+                    <p style="line-height:1.8; margin-bottom:15px;">@Html.Raw(Model.Etkinlik.Aciklama)</p>
+                }
+            </div>
+        </div>
+    </div>
+</section>

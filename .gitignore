@@ -1,6 +1,39 @@
+﻿# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio files
 .vs/
-Thumbs.db
-Desktop.ini
+*.user
+*.userosscache
+*.sln.docstates
+
+# IDE / OS junk
+.vscode/
 .DS_Store
-node_modules/
-*.log
+Thumbs.db
+
+# Config files (Güvenlik için asıl şifre barındıran Dev ortamları)
+appsettings.Development.json
+secrets.json
+
+# Local database (SQLite veya LocalDB mdf)
+*.mdf
+*.ldf
+*.db
+*.sqlite
+
+# Output
+TestResults/

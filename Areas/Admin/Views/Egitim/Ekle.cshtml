@@ -1,0 +1,26 @@
+﻿@model Egitim
+@{ViewData["Title"] = Model.Id == 0 ? "Yeni Egitim" : "Egitim Duzenle"; var isEdit = Model.Id != 0;}
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h3><i class="fas fa-graduation-cap" style="color:var(--admin-accent);"></i> @ViewData["Title"]</h3>
+        <a asp-action="Index" class="btn-admin btn-admin-edit"><i class="fas fa-arrow-left"></i> Geri</a>
+    </div>
+    <form asp-action="@(isEdit ? "Duzenle" : "Ekle")" method="post" enctype="multipart/form-data" class="admin-form">
+        @Html.AntiForgeryToken()
+        @if (isEdit) { <input type="hidden" asp-for="Id"> <input type="hidden" asp-for="OlusturulmaTarihi"> }
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
+            <div class="form-group"><label>Baslik *</label><input asp-for="Baslik" placeholder="Egitim adi"></div>
+            <div class="form-group"><label>Egitmen</label><input asp-for="Egitmen" placeholder="Egitmen adi"></div>
+            <div class="form-group"><label>Seviye</label>
+                <select asp-for="Seviye"><option value="">Secin</option><option>Baslangic</option><option>Orta</option><option>Ileri</option></select>
+            </div>
+            <div class="form-group"><label>Sira</label><input asp-for="Sira" type="number" min="0"></div>
+        </div>
+        <div class="form-group"><label>Aciklama</label><textarea asp-for="Aciklama"></textarea></div>
+        <div class="form-group"><label>Gorsel</label><input type="file" name="gorselFile" accept="image/*">
+            @if (!string.IsNullOrEmpty(Model.GorselYolu)) { <img src="@Model.GorselYolu" style="height:60px;margin-top:8px;border-radius:4px;"> <input type="hidden" asp-for="GorselYolu"> }
+        </div>
+        <div class="form-group" style="display:flex;align-items:center;gap:10px;"><input asp-for="Aktif" type="checkbox" style="width:auto;margin:0;"><label asp-for="Aktif" style="margin:0;">Aktif</label></div>
+        <button type="submit" class="btn-admin btn-admin-primary" style="padding:12px 30px;font-size:1rem;"><i class="fas fa-save"></i> @(isEdit ? "Guncelle" : "Kaydet")</button>
+    </form>
+</div>

@@ -1,0 +1,24 @@
+﻿@model List<GaleriGorseli>
+@{ViewData["Title"] = "Galeri Yonetimi";}
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h3><i class="fas fa-images" style="color:var(--admin-accent);"></i> Galeri Gorselleri</h3>
+        <a asp-action="Ekle" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Gorsel Ekle</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;">
+        @foreach(var g in Model){
+            <div style="background:#f8f9fa;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                <img src="@g.GorselYolu" style="width:100%;height:160px;object-fit:cover;">
+                <div style="padding:12px;">
+                    <p style="font-weight:600; font-size:0.9rem; margin-bottom:5px;">@(string.IsNullOrEmpty(g.Baslik) ? "Basliksiz" : g.Baslik)</p>
+                    <p style="font-size:0.8rem; color:#6c757d; margin-bottom:10px;">@g.Tarih?.ToString("dd.MM.yyyy")</p>
+                    <span class="@(g.Aktif?"badge-aktif":"badge-pasif")">@(g.Aktif?"Aktif":"Pasif")</span>
+                    <form asp-action="Sil" method="post" onsubmit="return confirm('Gorseli silmek istediginize emin misiniz?')" style="margin-top:10px;">
+                        @Html.AntiForgeryToken()<input type="hidden" name="id" value="@g.Id">
+                        <button type="submit" class="btn-admin btn-admin-delete" style="font-size:0.75rem;padding:6px 10px;width:100%"><i class="fas fa-trash"></i> Sil</button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</div>

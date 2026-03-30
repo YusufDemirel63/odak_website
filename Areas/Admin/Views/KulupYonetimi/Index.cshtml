@@ -1,0 +1,32 @@
+﻿@model List<Kulup>
+@{ViewData["Title"] = "Kulupler";}
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h3><i class="fas fa-users" style="color:var(--admin-accent);"></i> Kulupler</h3>
+        <a asp-action="Ekle" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Kulup Ekle</a>
+    </div>
+    <div style="overflow-x:auto;">
+        <table class="admin-table">
+            <thead><tr><th>Ad</th><th>Ikon</th><th>Sira</th><th>Durum</th><th>Kisa Aciklama</th><th>Islem</th></tr></thead>
+            <tbody>
+                @foreach (var k in Model) {
+                    <tr>
+                        <td><strong>@k.Ad</strong></td>
+                        <td><i class="@k.Icon"></i></td>
+                        <td>@k.Sira</td>
+                        <td><span class="@(k.Aktif ? "badge-aktif" : "badge-pasif")">@(k.Aktif ? "Aktif" : "Pasif")</span></td>
+                        <td>@k.KisaAciklama</td>
+                        <td style="display:flex;gap:8px;">
+                            <a asp-action="Duzenle" asp-route-id="@k.Id" class="btn-admin btn-admin-edit"><i class="fas fa-edit"></i></a>
+                            <form asp-action="Sil" method="post" onsubmit="return confirm('Silinsin mi?')">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@k.Id">
+                                <button type="submit" class="btn-admin btn-admin-delete"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

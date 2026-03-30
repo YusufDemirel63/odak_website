@@ -1,0 +1,127 @@
+﻿@model OdakMVC.Models.ViewModels.HomeViewModel
+@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<!-- HERO SLIDER -->
+<section class="hero-slider">
+    <div class="slider-wrapper">
+        @if (Model.Sliderlar.Any())
+        {
+            @for (int i = 0; i < Model.Sliderlar.Count; i++)
+            {
+                <div class="slide @(i == 0 ? "active" : "")" style="background-image: url('@Model.Sliderlar[i].GorselYolu')"></div>
+            }
+        }
+        else
+        {
+            <div class="slide active" style="background-image: url('/gorseller/sliders/1.png')"></div>
+        }
+    </div>
+    <button class="slider-btn prev" aria-label="Onceki"><i class="fas fa-chevron-left"></i></button>
+    <button class="slider-btn next" aria-label="Sonraki"><i class="fas fa-chevron-right"></i></button>
+    <div class="slider-dots">
+        @for (int i = 0; i < Math.Max(Model.Sliderlar.Count, 1); i++)
+        {
+            <span class="dot @(i == 0 ? "active" : "")" data-slide="@i"></span>
+        }
+    </div>
+</section>
+
+<!-- ETKİNLİKLER -->
+<section class="events-section">
+    <div class="container">
+        <div class="section-title"><h2>Etkinliklerimiz</h2></div>
+        <div class="events-showcase">
+            @if (Model.SonEtkinlikler.Any())
+            {
+                <div class="event-poster">
+                    <img src="@Model.SonEtkinlikler.First().AfisGorseli" alt="Etkinlik Afisi" id="activePoster">
+                </div>
+                <div class="events-list">
+                    @foreach (var etkinlik in Model.SonEtkinlikler)
+                    {
+                        <a asp-controller="Etkinlik" asp-action="Detay" asp-route-id="@etkinlik.Id"
+                           class="event-item @(etkinlik == Model.SonEtkinlikler.First() ? "active" : "")"
+                           data-poster="@etkinlik.AfisGorseli">
+                            <div class="event-date-badge">
+                                @if (etkinlik.Tarih.HasValue)
+                                {
+                                    <span class="day">@etkinlik.Tarih.Value.Day</span>
+                                    <span class="month">@etkinlik.Tarih.Value.ToString("MMM")</span>
+                                }
+                                else
+                                {
+                                    <span class="day">Her</span>
+                                    <span class="month">Cuma</span>
+                                }
+                            </div>
+                            <div class="event-details">
+                                <h3>@etkinlik.Baslik</h3>
+                                @if (!string.IsNullOrEmpty(etkinlik.Saat))
+                                {
+                                    <p><i class="fas fa-clock"></i> @etkinlik.Saat</p>
+                                }
+                                @if (!string.IsNullOrEmpty(etkinlik.Konum))
+                                {
+                                    <p><i class="fas fa-map-marker-alt"></i> @etkinlik.Konum</p>
+                                }
+                            </div>
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+        <div class="section-footer">
+            <a asp-controller="Etkinlik" asp-action="Index" class="btn-secondary" id="tum-etkinlikbtn">
+                Tüm Etkinlikler <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- NEDEN ODAK -->
+<section class="features">
+    <div class="container">
+        <div class="section-title"><h2>Neden ODAK?</h2></div>
+        <div class="features-grid">
+            @foreach(var k in Model.Kulupler){
+                <div class="feature-card">
+                    <i class="@k.Icon"></i>
+                    <h3>@k.Ad</h3>
+                    <p>@k.KisaAciklama</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- HAKKIMIZDA ÖZETİ -->
+<section class="about-summary">
+    <div class="container">
+        <div class="about-flex">
+            <div class="about-image">
+                <img src="/gorseller/about.jpg" alt="Hakkimizda" style="width:100%;max-height:400px;object-fit:cover;border-radius:10px;">
+            </div>
+            <div class="about-text">
+                <div class="section-title section-title-left">
+                    <h2>Biz Kimiz?</h2>
+                </div>
+                <p>@(Model.HakkimizdaOzeti?.Icerik != null && Model.HakkimizdaOzeti.Icerik.Length > 300 
+                    ? Model.HakkimizdaOzeti.Icerik.Substring(0, 300) + "..." 
+                    : Model.HakkimizdaOzeti?.Icerik)</p>
+
+                <a asp-controller="Kurumsal" asp-action="Hakkimizda" class="btn-secondary" style="margin-top:15px;">Daha Fazlası</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- INSTAGRAM FEED -->
+<section class="instagram-feed-section" style="padding: 40px 0; background-color: var(--bg-light);">
+    <div class="container">
+        <div class="section-title"><h2>Sosyal Medyada Biz</h2></div>
+        <script src="https://elfsightcdn.com/platform.js" async></script>
+        <div class="elfsight-app-9be38dfd-ae21-4171-b111-1f85e3eb8b13" data-elfsight-app-lazy></div>
+    </div>
+</section>

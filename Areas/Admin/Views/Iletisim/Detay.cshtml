@@ -1,0 +1,24 @@
+﻿@model IletisimMesaji
+@{ViewData["Title"] = "Mesaj Detayi";}
+<div class="admin-card" style="max-width:700px;">
+    <div class="admin-card-header">
+        <h3><i class="fas fa-envelope-open" style="color:var(--admin-accent);"></i> Mesaj Detayi</h3>
+        <a asp-action="Index" class="btn-admin btn-admin-edit"><i class="fas fa-arrow-left"></i> Geri</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:25px;padding:20px;background:#f8f9fa;border-radius:10px;">
+        <div><small style="color:#6c757d;">Gonderen</small><p style="font-weight:600;color:#003054;">@Model.AdSoyad</p></div>
+        <div><small style="color:#6c757d;">E-posta</small><p><a href="mailto:@Model.Email">@Model.Email</a></p></div>
+        <div><small style="color:#6c757d;">Telefon</small><p>@(Model.Telefon ?? "-")</p></div>
+        <div><small style="color:#6c757d;">Tarih</small><p>@Model.GonderimTarihi.ToString("dd.MM.yyyy HH:mm")</p></div>
+    </div>
+    <div style="background:#fff;border:1px solid #e9ecef;border-radius:10px;padding:25px;">
+        <p style="line-height:1.8;color:#495057;">@Model.Mesaj</p>
+    </div>
+    <div style="margin-top:20px;display:flex;gap:10px;">
+        <a href="mailto:@Model.Email" class="btn-admin btn-admin-primary"><i class="fas fa-reply"></i> Yanitla</a>
+        <form asp-action="Sil" method="post" onsubmit="return confirm('Silinsin mi?')">
+            @Html.AntiForgeryToken()<input type="hidden" name="id" value="@Model.Id">
+            <button type="submit" class="btn-admin btn-admin-delete"><i class="fas fa-trash"></i> Sil</button>
+        </form>
+    </div>
+</div>

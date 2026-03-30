@@ -1,0 +1,48 @@
+﻿@model List<Egitim>
+@{
+    ViewData["Title"] = "Egitimler";
+}
+<section style="padding: 60px 0; min-height:60vh; background: #fff;">
+    <div class="container">
+        <div class="section-title"><h2>Kurslar &amp; Eğitimler</h2></div>
+        @if (Model.Any())
+        {
+            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:25px; margin-top:30px;">
+                @foreach (var egitim in Model)
+                {
+                    <div class="course-card-new">
+                        <div class="course-card-image">
+                            @if (!string.IsNullOrEmpty(egitim.GorselYolu))
+                            {
+                                <img src="@egitim.GorselYolu" alt="@egitim.Baslik">
+                            }
+                            @if (!string.IsNullOrEmpty(egitim.Egitmen))
+                            {
+                                <div class="course-overlay">
+                                    <span class="instructor-badge"><i class="fas fa-play"></i> @egitim.Egitmen ile</span>
+                                </div>
+                            }
+                            <div class="course-title-overlay">
+                                @if (!string.IsNullOrEmpty(egitim.Seviye))
+                                {
+                                    <span class="course-tag">@egitim.Seviye.ToUpper()</span>
+                                }
+                                <h4>@egitim.Baslik.ToUpper()</h4>
+                            </div>
+                        </div>
+                        <div class="course-card-footer">
+                            <h3>@egitim.Baslik</h3>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div style="text-align:center; padding:60px; color:var(--text-muted);">
+                <i class="fas fa-graduation-cap" style="font-size:4rem; margin-bottom:20px;"></i>
+                <p>Henüz eğitim bulunmamaktadır.</p>
+            </div>
+        }
+    </div>
+</section>
