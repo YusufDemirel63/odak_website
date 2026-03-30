@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OdakMVC.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +34,22 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+// Docker ilk baslatildiginda otomatik Update-Database (Migration)
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<OdakMVC.Data.OdakDbContext>();
+        context.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Veritabani migration veya seed islemi sirasinda bir hata eklendi.");
+    }
+}
+
 app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
@@ -50,3 +66,4 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
