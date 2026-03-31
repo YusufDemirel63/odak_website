@@ -1,4 +1,4 @@
-﻿ /* ==================== GENEL AYARLAR ==================== */
+ /* ==================== GENEL AYARLAR ==================== */
  * {
      margin: 0;
      padding: 0;
@@ -396,6 +396,45 @@
      background: var(--primary-color);
      transform: scale(1.2);
  }
+
+/* ==================== SLIDER MOBİL RESPONSIVE ==================== */
+@media (max-width: 768px) {
+    .hero-slider {
+        height: 55vw;       /* Telefon genişliğinin %55'i — görsel oranını korur */
+        min-height: 220px;  /* Çok küçük ekranlarda minimum yükseklik */
+        max-height: 480px;  /* Tablet üstü için sınır */
+    }
+
+    .slide {
+        background-position: center top; /* Görselin üst kısmını (yüz, logo) göster */
+    }
+
+    .slider-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .slider-btn.prev { left: 10px; }
+    .slider-btn.next { right: 10px; }
+
+    .slider-dots {
+        bottom: 12px;
+        gap: 8px;
+    }
+
+    .slider-dots .dot {
+        width: 8px;
+        height: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-slider {
+        height: 60vw;
+        min-height: 180px;
+    }
+}
 
  .btn-primary {
      background-color: var(--primary-color);
