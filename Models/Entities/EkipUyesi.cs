@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 namespace OdakMVC.Models.Entities
 {
     public class EkipUyesi
@@ -10,9 +10,12 @@ namespace OdakMVC.Models.Entities
         [MaxLength(150)]
         [Display(Name = "Gorev")]
         public string? Gorev { get; set; }
-        [MaxLength(150)]
-        [Display(Name = "Birim")]
-        public string? Birim { get; set; }
+        [Display(Name = "Hiyerarşi Kademesi (1:Başkan, 2:Başkan Yrd/Sekreter, 3:Yönetim, 4:Birim Personeli)")]
+        public int HiyerarsiKademesi { get; set; } = 4;
+
+        [Display(Name = "Bağlı Olduğu Birim")]
+        public int? EkipBirimiId { get; set; }
+        public virtual EkipBirimi? EkipBirimi { get; set; }
         [MaxLength(500)]
         [Display(Name = "Fotograf Yolu")]
         public string? FotografYolu { get; set; }

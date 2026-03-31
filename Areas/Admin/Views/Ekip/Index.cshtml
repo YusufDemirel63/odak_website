@@ -1,4 +1,4 @@
-﻿@model List<EkipUyesi>
+@model List<EkipUyesi>
 @{ViewData["Title"] = "Ekip Uyeleri";}
 <div class="admin-card">
     <div class="admin-card-header">
@@ -6,11 +6,34 @@
         <a asp-action="Ekle" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Uye Ekle</a>
     </div>
     <table class="admin-table">
-        <thead><tr><th>Ad Soyad</th><th>Gorev</th><th>Birim</th><th>Sira</th><th>Durum</th><th>Islem</th></tr></thead>
+        <thead>
+            <tr>
+                <th>Ad Soyad</th>
+                <th>Görev</th>
+                <th>Hiyerarşi Kademesi</th>
+                <th>Birim</th>
+                <th>Sıra</th>
+                <th>Durum</th>
+                <th>Islem</th>
+            </tr>
+        </thead>
         <tbody>
             @foreach (var u in Model) {
                 <tr>
-                    <td>@u.AdSoyad</td><td>@(u.Gorev??"-")</td><td>@(u.Birim??"-")</td><td>@u.Sira</td>
+                    <td>@u.AdSoyad</td>
+                    <td>@(u.Gorev??"-")</td>
+                    <td>
+                        @{
+                            string hiyerarsi = "";
+                            if (u.HiyerarsiKademesi == 1) hiyerarsi = "Başkanlık";
+                            else if (u.HiyerarsiKademesi == 2) hiyerarsi = "Bşk Yrd / Sekreter";
+                            else if (u.HiyerarsiKademesi == 3) hiyerarsi = "Yönetim Kurulu";
+                            else if (u.HiyerarsiKademesi == 4) hiyerarsi = "Birim Elemanı";
+                        }
+                        <span class="badge" style="background-color:#003054;color:white;">@hiyerarsi</span>
+                    </td>
+                    <td>@(u.EkipBirimi != null ? u.EkipBirimi.Ad : "-")</td>
+                    <td>@u.Sira</td>
                     <td><span class="@(u.Aktif?"badge-aktif":"badge-pasif")">@(u.Aktif?"Aktif":"Pasif")</span></td>
                     <td style="display:flex;gap:8px;">
                         <a asp-action="Duzenle" asp-route-id="@u.Id" class="btn-admin btn-admin-edit"><i class="fas fa-edit"></i></a>

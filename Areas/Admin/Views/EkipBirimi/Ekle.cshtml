@@ -1,0 +1,27 @@
+@model EkipBirimi
+@{ViewData["Title"] = Model.Id==0?"Birim Ekle":"Birim Düzenle"; var isEdit=Model.Id!=0;}
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h3><i class="fas fa-sitemap" style="color:var(--admin-accent);"></i> @ViewData["Title"]</h3>
+        <a asp-action="Index" class="btn-admin btn-admin-edit"><i class="fas fa-arrow-left"></i> Geri</a>
+    </div>
+    <form asp-action="@(isEdit?"Duzenle":"Ekle")" method="post" class="admin-form">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="All" class="text-danger" style="margin-bottom:15px; padding:10px; background:#ffebee; color:#c62828; border-radius:5px;"></div>
+        @if(isEdit){<input type="hidden" asp-for="Id">}
+        
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+            <div class="form-group"><label asp-for="Ad" class="control-label"></label><input asp-for="Ad"></div>
+            <div class="form-group"><label asp-for="Aciklama" class="control-label"></label><input asp-for="Aciklama" placeholder="Örn: Sosyal Medya, İçerik..."></div>
+            <div class="form-group"><label asp-for="Icon" class="control-label"></label><input asp-for="Icon" placeholder="Örn: fas fa-bullhorn"><small style="display:block;margin-top:5px;color:#7f8c8d;">FontAwesome 5+ arayüzü class ismini buraya yazın.</small></div>
+            <div class="form-group"><label asp-for="Sira" class="control-label"></label><input asp-for="Sira" type="number" min="0"></div>
+        </div>
+
+        <div class="form-group" style="display:flex;align-items:center;gap:10px;"><input asp-for="Aktif" type="checkbox" style="width:auto;margin:0;"><label asp-for="Aktif" style="margin:0;">Aktif</label></div>
+        <button type="submit" class="btn-admin btn-admin-primary" style="padding:12px 30px;font-size:1rem;"><i class="fas fa-save"></i> @(isEdit?"Güncelle":"Kaydet")</button>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

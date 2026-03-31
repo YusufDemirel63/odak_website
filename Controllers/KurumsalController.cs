@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using OdakMVC.Data;
 
 namespace OdakMVC.Controllers
@@ -33,6 +33,7 @@ namespace OdakMVC.Controllers
         public IActionResult Ekibimiz()
         {
             var ekip = _context.EkipUyeleri.Where(e => e.Aktif).OrderBy(e => e.Sira).ToList();
+            ViewBag.Birimler = _context.EkipBirimleri.Where(b => b.Aktif).OrderBy(b => b.Sira).ToList();
             return View(ekip);
         }
     }

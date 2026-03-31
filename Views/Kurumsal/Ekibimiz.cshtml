@@ -1,33 +1,125 @@
-﻿@model List<EkipUyesi>
+@model List<EkipUyesi>
 @{
     ViewData["Title"] = "Ekibimiz";
+    var baskan = Model.FirstOrDefault(m => m.HiyerarsiKademesi == 1);
+    var baskanYardimcilari = Model.Where(m => m.HiyerarsiKademesi == 2).ToList();
+    var yonetimKurulu = Model.Where(m => m.HiyerarsiKademesi == 3).ToList();
+    var birimElemanlari = Model.Where(m => m.HiyerarsiKademesi == 4).ToList();
+    var birimler = ViewBag.Birimler as List<EkipBirimi> ?? new List<EkipBirimi>();
 }
+
+<style>
+    :root { --line-color: #cbd5e1; }
+    .org-chart-wrapper { display: flex; flex-direction: column; align-items: center; padding: 40px 15px; background-color: #f8fafc; }
+    .org-node { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; width: 220px; border-top: 4px solid var(--primary-color); z-index: 2; position: relative; }
+    .org-node img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; background:#e2e8f0; }
+    .org-node i.fa-user { font-size: 2.5rem; color: #94a3b8; display: block; margin-bottom: 15px; height: 90px; width: 90px; line-height:90px; background:#f1f5f9; border-radius: 50%; margin: 0 auto 12px; }
+    .org-node h3 { font-size: 1.05rem; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
+    .org-node p { font-size: 0.8rem; color: #e74c3c; font-weight: 600; margin: 0; }
+    .org-socials { margin-top: 10px; display: flex; justify-content: center; gap: 8px; }
+    .org-socials a { color: #94a3b8; font-size: 0.85rem; transition: color 0.3s; }
+    .org-socials a:hover { color: var(--primary-color); }
+    
+    .org-tier { display: flex; justify-content: center; gap: 40px; margin-bottom: 40px; position: relative; flex-wrap: wrap; }
+    .org-section-title { font-size: 1.4rem; color: var(--primary-color); font-weight: 700; display: block; width: 100%; text-align: center; margin-bottom: 30px; position: relative; padding-bottom: 10px; }
+    .org-section-title::after { content: ''; width: 50px; height: 3px; background: #e74c3c; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
+
+    /* Units Grid */
+    .units-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; width: 100%; max-width: 1200px; margin: 0 auto; align-items: start; }
+    .unit-column { display: flex; flex-direction: column; gap: 20px; }
+    .unit-header-card { background: #fff; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); padding: 25px 20px; display: flex; align-items: center; gap: 15px; }
+    .unit-header-card .icon-box { background: #fff0ed; color: #e74c3c; width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+    .unit-header-card .unit-info h4 { font-size: 1.05rem; font-weight: 700; color: var(--primary-color); margin: 0 0 5px 0; }
+    .unit-header-card .unit-info p { font-size: 0.75rem; color: #64748b; margin: 0; line-height: 1.3; }
+</style>
+
 <section class="page-header" style="background: linear-gradient(rgba(0,48,84,0.85), rgba(0,48,84,0.95)), url('/gorseller/sliders/1.png'); background-size:cover; background-position:center; padding: 80px 0; text-align: center;">
     <div class="container">
         <h1 style="color:#fff; font-size: 2.5rem; margin-bottom: 15px;">Ekibimiz</h1>
-        <p style="color: rgba(255,255,255,0.85); font-size: 1.1rem;">Odak Düşünce Kulübü'nün vizyonunu şekillendiren kadromuz.</p>
+        <p style="color: rgba(255,255,255,0.85); font-size: 1.1rem;">Odak Düşünce Kulübü'nün vizyonunu şekillendiren yönetim kadrosu ve birimler.</p>
     </div>
 </section>
 
-<section class="team-hierarchy" style="padding: 60px 0;">
-    <div class="container">
-        <div class="org-grid">
-            @foreach (var uye in Model.OrderBy(e => e.Sira))
-            {
-                <div class="org-card" style="margin-bottom:20px;">
-                    <div class="org-img">
-                        @if (!string.IsNullOrEmpty(uye.FotografYolu))
-                        {
-                            <img src="@uye.FotografYolu" alt="@uye.AdSoyad" style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
-                        }
-                        else { <i class="fas fa-user" style="font-size:3rem; padding: 30px 0;"></i> }
-                    </div>
-                    <div class="org-info" style="text-align:center; padding-top:10px;">
-                        <h3 style="font-size:1.1rem; color:var(--text-dark);">@uye.AdSoyad</h3>
-                        <p style="font-size:0.85rem; color:var(--text-muted);">@uye.Gorev</p>
+<section class="org-chart-wrapper">
+    <div class="container" style="display: flex; flex-direction: column; align-items: center;">
+
+        <!-- TIER 1: Başkanlık -->
+        @if(baskan != null) {
+            <div class="org-tier">
+                <div class="org-node">
+                    @if(!string.IsNullOrEmpty(baskan.FotografYolu)) { <img src="@baskan.FotografYolu" alt="@baskan.AdSoyad"> } else { <i class="fas fa-user"></i> }
+                    <h3>@baskan.AdSoyad</h3>
+                    <p>@baskan.Gorev</p>
+                    <div class="org-socials">
+                        @if(!string.IsNullOrEmpty(baskan.LinkedInUrl)){<a href="@baskan.LinkedInUrl" target="_blank"><i class="fab fa-linkedin-in"></i></a>}
+                        @if(!string.IsNullOrEmpty(baskan.TwitterUrl)){<a href="@baskan.TwitterUrl" target="_blank"><i class="fab fa-twitter"></i></a>}
+                        @if(!string.IsNullOrEmpty(baskan.Email)){<a href="mailto:@baskan.Email"><i class="fas fa-envelope"></i></a>}
                     </div>
                 </div>
-            }
-        </div>
+            </div>
+        }
+
+        <!-- TIER 2: Başkan Yardımcıları -->
+        @if(baskanYardimcilari.Any()) {
+            <div class="org-tier" style="margin-top:-10px;">
+                @foreach(var yrd in baskanYardimcilari) {
+                    <div class="org-node" style="border-top-color:#e74c3c;">
+                        @if(!string.IsNullOrEmpty(yrd.FotografYolu)) { <img src="@yrd.FotografYolu" alt="@yrd.AdSoyad"> } else { <i class="fas fa-user"></i> }
+                        <h3>@yrd.AdSoyad</h3>
+                        <p style="color:var(--primary-color);">@yrd.Gorev</p>
+                        <div class="org-socials">
+                            @if(!string.IsNullOrEmpty(yrd.LinkedInUrl)){<a href="@yrd.LinkedInUrl"><i class="fab fa-linkedin-in"></i></a>}
+                            @if(!string.IsNullOrEmpty(yrd.Email)){<a href="mailto:@yrd.Email"><i class="fas fa-envelope"></i></a>}
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        <!-- TIER 3: Yönetim Kurulu -->
+        @if(yonetimKurulu.Any()) {
+            <div style="margin-top:20px; width:100%;">
+                <h2 class="org-section-title">Yönetim Kurulu</h2>
+                <div class="org-tier" style="gap:25px; margin-bottom:60px;">
+                    @foreach(var yk in yonetimKurulu) {
+                        <div class="org-node" style="border-top:none; box-shadow:0 3px 15px rgba(0,0,0,0.03);">
+                            @if(!string.IsNullOrEmpty(yk.FotografYolu)) { <img src="@yk.FotografYolu" alt="@yk.AdSoyad"> } else { <i class="fas fa-user"></i> }
+                            <h3>@yk.AdSoyad</h3>
+                            <p>@yk.Gorev</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- TIER 4: Birimler -->
+        @if(birimler.Any()) {
+            <div style="width:100%;">
+                <h2 class="org-section-title">Koordinatörlükler & Birimler</h2>
+                <div class="units-wrapper">
+                    @foreach(var b in birimler) {
+                        <div class="unit-column">
+                            <!-- Unit Header -->
+                            <div class="unit-header-card">
+                                <div class="icon-box"><i class="@(string.IsNullOrEmpty(b.Icon) ? "fas fa-users" : b.Icon)"></i></div>
+                                <div class="unit-info">
+                                    <h4>@b.Ad</h4>
+                                    <p>@b.Aciklama</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Unit Members -->
+                            @foreach(var personel in birimElemanlari.Where(e => e.EkipBirimiId == b.Id)) {
+                                <div class="org-node" style="width:100%; border-top:none; box-shadow:0 2px 10px rgba(0,0,0,0.03); padding:15px;">
+                                    @if(!string.IsNullOrEmpty(personel.FotografYolu)) { <img src="@personel.FotografYolu" alt="@personel.AdSoyad" style="width:70px; height:70px;"> } else { <i class="fas fa-user" style="width:70px; height:70px; line-height:70px; font-size:2rem; margin-bottom:10px;"></i> }
+                                    <h3 style="font-size:0.95rem;">@personel.AdSoyad</h3>
+                                    <p style="font-size:0.75rem;">@personel.Gorev</p>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        }
     </div>
 </section>

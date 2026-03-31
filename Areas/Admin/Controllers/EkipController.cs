@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OdakMVC.Data;
 using OdakMVC.Models.Entities;
@@ -13,14 +13,22 @@ namespace OdakMVC.Areas.Admin.Controllers
         { _context = context; _env = env; }
 
         public async Task<IActionResult> Index()
-            => View(await _context.EkipUyeleri.OrderBy(e => e.Sira).ToListAsync());
+            => View(await _context.EkipUyeleri.Include(e => e.EkipBirimi).OrderBy(e => e.HiyerarsiKademesi).ThenBy(e => e.Sira).ToListAsync());
 
-        public IActionResult Ekle() => View(new EkipUyesi());
+        public async Task<IActionResult> Ekle() 
+        { 
+            ViewBag.Birimler = await _context.EkipBirimleri.ToListAsync(); 
+            return View(new EkipUyesi()); 
+        }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Ekle(EkipUyesi model, IFormFile? fotografFile)
         {
-            if (!ModelState.IsValid) return View(model);
+            ModelState.Remove("EkipBirimi"); // Ignore navigation property validation
+            if (!ModelState.IsValid) {
+                ViewBag.Birimler = await _context.EkipBirimleri.ToListAsync();
+                return View(model);
+            }
             if (fotografFile != null && fotografFile.Length > 0)
                 model.FotografYolu = await GorselKaydet(fotografFile, "ekip");
 
@@ -34,13 +42,18 @@ namespace OdakMVC.Areas.Admin.Controllers
         {
             var uye = await _context.EkipUyeleri.FindAsync(id);
             if (uye == null) return NotFound();
+            ViewBag.Birimler = await _context.EkipBirimleri.ToListAsync();
             return View(uye);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Duzenle(EkipUyesi model, IFormFile? fotografFile)
         {
-            if (!ModelState.IsValid) return View(model);
+            ModelState.Remove("EkipBirimi"); // Ignore navigation property validation
+            if (!ModelState.IsValid) {
+                ViewBag.Birimler = await _context.EkipBirimleri.ToListAsync();
+                return View(model);
+            }
             if (fotografFile != null && fotografFile.Length > 0)
                 model.FotografYolu = await GorselKaydet(fotografFile, "ekip");
 

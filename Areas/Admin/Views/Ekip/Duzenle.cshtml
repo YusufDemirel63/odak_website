@@ -1,4 +1,4 @@
-﻿@model EkipUyesi
+@model EkipUyesi
 @{ViewData["Title"] = Model.Id==0?"Uye Ekle":"Uye Duzenle"; var isEdit=Model.Id!=0;}
 <div class="admin-card">
     <div class="admin-card-header">
@@ -11,14 +11,34 @@
         @if(isEdit){<input type="hidden" asp-for="Id">}
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
             <div class="form-group"><label>Ad Soyad *</label><input asp-for="AdSoyad"></div>
-            <div class="form-group"><label>Gorev</label><input asp-for="Gorev" placeholder="Kurup Baskani, Uye..."></div>
-            <div class="form-group"><label>Birim</label><input asp-for="Birim" placeholder="Medya, Egitim..."></div>
-            <div class="form-group"><label>Sira</label><input asp-for="Sira" type="number" min="0"></div>
+            <div class="form-group"><label>Görev</label><input asp-for="Gorev" placeholder="Kulüp Başkanı, Üye..."></div>
+            <div class="form-group">
+                <label asp-for="HiyerarsiKademesi" class="control-label"></label>
+                <select asp-for="HiyerarsiKademesi" class="form-control" id="HiyerarsiKademesi">
+                    <option value="1">Başkanlık (Tek Kart)</option>
+                    <option value="2">Bşk. Yrd / Genel Sekreter</option>
+                    <option value="3">Yönetim Kurulu</option>
+                    <option value="4" selected>Birim Personeli</option>
+                </select>
+                <span asp-validation-for="HiyerarsiKademesi" class="text-danger"></span>
+            </div>
+            <div class="form-group" id="birimSecimiContainer">
+                <label asp-for="EkipBirimiId" class="control-label"></label>
+                <select asp-for="EkipBirimiId" class="form-control" id="EkipBirimiId">
+                    <option value="">-- Birim Seç--</option>
+                    @if(ViewBag.Birimler != null) {
+                        foreach(var b in ViewBag.Birimler) {
+                            <option value="@b.Id">@b.Ad</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group"><label>Sıra</label><input asp-for="Sira" type="number" min="0"></div>
             <div class="form-group"><label>E-posta</label><input asp-for="Email" type="email"></div>
             <div class="form-group"><label>LinkedIn URL</label><input asp-for="LinkedInUrl" type="url"></div>
             <div class="form-group"><label>Twitter URL</label><input asp-for="TwitterUrl" type="url"></div>
         </div>
-        <div class="form-group"><label>Fotograf</label><input type="file" name="fotografFile" accept="image/*">
+        <div class="form-group"><label>Fotoğraf</label><input type="file" name="fotografFile" accept="image/*">
             @if(!string.IsNullOrEmpty(Model.FotografYolu)){<img src="@Model.FotografYolu" style="height:60px;margin-top:8px;border-radius:50%;"><input type="hidden" asp-for="FotografYolu">}
         </div>
         <div class="form-group" style="display:flex;align-items:center;gap:10px;"><input asp-for="Aktif" type="checkbox" style="width:auto;margin:0;"><label asp-for="Aktif" style="margin:0;">Aktif</label></div>
@@ -26,3 +46,19 @@
     </form>
 </div>
 
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById('HiyerarsiKademesi').addEventListener('change', function() {
+            var val = this.value;
+            var container = document.getElementById('birimSecimiContainer');
+            if(val == '4') {
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+                document.getElementById('EkipBirimiId').value = '';
+            }
+        });
+        document.getElementById('HiyerarsiKademesi').dispatchEvent(new Event('change'));
+    </script>
+}

@@ -18,6 +18,7 @@ namespace OdakMVC.Data
         public DbSet<IcerikSayfasi> IcerikSayfalari { get; set; }
         public DbSet<AdminKullanici> AdminKullanicilari { get; set; }
         public DbSet<SiteAyar> SiteAyarlari { get; set; }
+        public DbSet<EkipBirimi> EkipBirimleri { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -58,11 +59,32 @@ namespace OdakMVC.Data
                 new Etkinlik { Id = 1, Baslik = "Insan ve Insan Otesi Programi", Aciklama = "Odak Dusunce Kulubu olarak duzenledigimiz programda insan...", Saat = "19:30 - 21:30", Konum = "Beyaz Bilgi Kitap Kahve", AfisGorseli = "/gorseller/insan-programi/1.png", Aktif = true, OlusturulmaTarihi = new DateTime(2026, 1, 1) }
             );
 
+            // Ekip Birimleri Seed
+            modelBuilder.Entity<EkipBirimi>().HasData(
+                new EkipBirimi { Id = 1, Ad = "Medya ve İletişim", Aciklama = "Sosyal Medya, Tasarım", Icon = "fas fa-bullhorn", Sira = 1, Aktif = true },
+                new EkipBirimi { Id = 2, Ad = "Etkinlik Organizasyon", Aciklama = "Program Yönetimi, Organizasyon", Icon = "fas fa-calendar-check", Sira = 2, Aktif = true },
+                new EkipBirimi { Id = 3, Ad = "Eğitim ve Yayın", Aciklama = "Ar-Ge, İçerik Üretimi", Icon = "fas fa-book-reader", Sira = 3, Aktif = true },
+                new EkipBirimi { Id = 4, Ad = "İnsan Kaynakları", Aciklama = "Üye Kabul, İlişkiler", Icon = "fas fa-users-cog", Sira = 4, Aktif = true }
+            );
+
+            // Ekip Uyeleri Seeding
             modelBuilder.Entity<EkipUyesi>().HasData(
-                new EkipUyesi { Id = 1, AdSoyad = "Enes SELCUK", Gorev = "Kulup Baskani", Birim = "Yonetim", Sira = 1, Aktif = true },
-                new EkipUyesi { Id = 2, AdSoyad = "Mustafa TUTAR", Gorev = "Baskan Yardimcisi", Birim = "Yonetim", Sira = 2, Aktif = true },
-                new EkipUyesi { Id = 3, AdSoyad = "Yusuf EKINCI", Gorev = "Genel Sekreter", Birim = "Yonetim", Sira = 3, Aktif = true },
-                new EkipUyesi { Id = 4, AdSoyad = "Yusuf DEMIREL", Gorev = "Yonetim Kurulu Uyesi", Birim = "Medya", Sira = 4, Aktif = true }
+                new EkipUyesi { Id = 1, AdSoyad = "Enes SELÇUK", Gorev = "Kulüp Başkanı", HiyerarsiKademesi = 1, Sira = 1, Aktif = true },
+                new EkipUyesi { Id = 2, AdSoyad = "Mustafa TUTAR", Gorev = "Başkan Yardımcısı", HiyerarsiKademesi = 2, Sira = 1, Aktif = true },
+                new EkipUyesi { Id = 3, AdSoyad = "Yusuf EKİNCİ", Gorev = "Genel Sekreter", HiyerarsiKademesi = 2, Sira = 2, Aktif = true },
+                new EkipUyesi { Id = 4, AdSoyad = "Abdulkadir ELTER", Gorev = "Yönetim Kurulu Üyesi", HiyerarsiKademesi = 3, Sira = 1, Aktif = true },
+                new EkipUyesi { Id = 5, AdSoyad = "Yusuf DEMİREL", Gorev = "Yönetim Kurulu Üyesi", HiyerarsiKademesi = 3, Sira = 2, Aktif = true },
+                new EkipUyesi { Id = 6, AdSoyad = "Ali ERDİNE", Gorev = "Yönetim Kurulu Üyesi", HiyerarsiKademesi = 3, Sira = 3, Aktif = true },
+                new EkipUyesi { Id = 7, AdSoyad = "Ali EKBER", Gorev = "Yönetim Kurulu Üyesi", HiyerarsiKademesi = 3, Sira = 4, Aktif = true },
+                new EkipUyesi { Id = 8, AdSoyad = "Muhammet Ali KÖKYILDIRIM", Gorev = "Yönetim Kurulu Üyesi", HiyerarsiKademesi = 3, Sira = 5, Aktif = true },
+                new EkipUyesi { Id = 9, AdSoyad = "İshak ARIKAN", Gorev = "Yönetim Kurulu Üyesi", HiyerarsiKademesi = 3, Sira = 6, Aktif = true },
+                new EkipUyesi { Id = 10, AdSoyad = "Ali KARA", Gorev = "Yönetim Kurulu Üyesi", HiyerarsiKademesi = 3, Sira = 7, Aktif = true },
+                
+                // Birim Personelleri
+                new EkipUyesi { Id = 11, AdSoyad = "Yusuf DEMİREL", Gorev = "Medya Sorumlusu", HiyerarsiKademesi = 4, EkipBirimiId = 1, Sira = 1, Aktif = true },
+                new EkipUyesi { Id = 12, AdSoyad = "Yusuf EKİNCİ", Gorev = "Program Koordinatörü", HiyerarsiKademesi = 4, EkipBirimiId = 2, Sira = 1, Aktif = true },
+                new EkipUyesi { Id = 13, AdSoyad = "Mustafa TUTAR", Gorev = "Ar-Ge", HiyerarsiKademesi = 4, EkipBirimiId = 3, Sira = 1, Aktif = true },
+                new EkipUyesi { Id = 14, AdSoyad = "Muhammet Ali KÖKYILDIRIM", Gorev = "İK Uzmanı", HiyerarsiKademesi = 4, EkipBirimiId = 4, Sira = 1, Aktif = true }
             );
 
             // Admin Seed (Varsayılan appsettings.json verisine benzer)
