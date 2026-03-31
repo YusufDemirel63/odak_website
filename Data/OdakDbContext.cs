@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using OdakMVC.Models.Entities;
 
 namespace OdakMVC.Data
@@ -16,6 +16,8 @@ namespace OdakMVC.Data
         public DbSet<GaleriGorseli> GaleriGorselleri { get; set; }
         public DbSet<Kulup> Kulupler { get; set; }
         public DbSet<IcerikSayfasi> IcerikSayfalari { get; set; }
+        public DbSet<AdminKullanici> AdminKullanicilari { get; set; }
+        public DbSet<SiteAyar> SiteAyarlari { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -61,6 +63,32 @@ namespace OdakMVC.Data
                 new EkipUyesi { Id = 2, AdSoyad = "Mustafa TUTAR", Gorev = "Baskan Yardimcisi", Birim = "Yonetim", Sira = 2, Aktif = true },
                 new EkipUyesi { Id = 3, AdSoyad = "Yusuf EKINCI", Gorev = "Genel Sekreter", Birim = "Yonetim", Sira = 3, Aktif = true },
                 new EkipUyesi { Id = 4, AdSoyad = "Yusuf DEMIREL", Gorev = "Yonetim Kurulu Uyesi", Birim = "Medya", Sira = 4, Aktif = true }
+            );
+
+            // Admin Seed (Varsayılan appsettings.json verisine benzer)
+            modelBuilder.Entity<AdminKullanici>().HasData(
+                new AdminKullanici { Id = 1, KullaniciAdi = "admin", Sifre = "Odak@2024!", Aktif = true }
+            );
+
+            // SiteAyar Seed
+            modelBuilder.Entity<SiteAyar>().HasData(
+                new SiteAyar {
+                    Id = 1,
+                    SiteBaslik = "Odak Düşünce Kulübü | Oku, Düşün, Araştır, Keşfet",
+                    SiteAciklama = "Odak Düşünce Kulübü; gençlerin zihinsel gelişimine katkıda bulunan okuma, düşünme, araştırma ve keşfetme odaklı bir sivil toplum inisiyatifidir.",
+                    LogoYolu = "/gorseller/OdakLogo.svg",
+                    FaviconYolu = "/gorseller/OdakLogo.svg",
+                    Email = "odakdusuncekulubu@gmail.com",
+                    Telefon = "+90 552 272 25 63",
+                    WhatsAppNo = "905522722563",
+                    Adres = "Adana, Türkiye",
+                    Instagram = "https://www.instagram.com/odakdusuncekulubu/",
+                    Twitter = "https://x.com/odakdusunceklb",
+                    Youtube = "https://www.youtube.com/@odakdusuncekulubu",
+                    Facebook = "https://www.facebook.com/people/Odak-Kul%C3%BCb%C3%BC/pfbid0tw6mVHQTte16a38mhcEKpLSfLPZxk76HoAaC59HfS7mTmc8tefmSuUEAmfyNDbVwl/",
+                    NSosyal = "https://nsosyal.com/odakdusuncekulubu",
+                    FooterAciklama = "Zihinsel gelişim ve toplumsal farkındalık için doğru odak noktasındasınız. Bizi takip etmeye devam edin."
+                }
             );
         }
     }

@@ -20,6 +20,7 @@ namespace OdakMVC.Areas.Admin.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Ekle(GaleriGorseli model, List<IFormFile> gorselFiles)
         {
+            if (!ModelState.IsValid) return View(model);
             foreach (var file in gorselFiles.Where(f => f.Length > 0))
             {
                 var dir = Path.Combine(_env.WebRootPath, "gorseller", "galeri");
@@ -53,3 +54,4 @@ namespace OdakMVC.Areas.Admin.Controllers
         }
     }
 }
+

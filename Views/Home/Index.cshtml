@@ -1,6 +1,11 @@
-﻿@model OdakMVC.Models.ViewModels.HomeViewModel
+@model OdakMVC.Models.ViewModels.HomeViewModel
 @{
     ViewData["Title"] = "Ana Sayfa";
+    if (Model.Sliderlar.Any()) {
+        ViewData["HeroImage"] = Model.Sliderlar[0].GorselYolu;
+    } else {
+        ViewData["HeroImage"] = "/gorseller/sliders/1.png";
+    }
 }
 
 <!-- HERO SLIDER -->
@@ -36,7 +41,7 @@
             @if (Model.SonEtkinlikler.Any())
             {
                 <div class="event-poster">
-                    <img src="@Model.SonEtkinlikler.First().AfisGorseli" alt="Etkinlik Afisi" id="activePoster">
+                    <img src="@Model.SonEtkinlikler.First().AfisGorseli" alt="Etkinlik Afisi" id="activePoster" loading="lazy" width="300" height="400">
                 </div>
                 <div class="events-list">
                     @foreach (var etkinlik in Model.SonEtkinlikler)
@@ -101,7 +106,7 @@
     <div class="container">
         <div class="about-flex">
             <div class="about-image">
-                <img src="/gorseller/about.jpg" alt="Hakkimizda" style="width:100%;max-height:400px;object-fit:cover;border-radius:10px;">
+                <img src="/gorseller/about.jpg" alt="Hakkimizda" loading="lazy" width="600" height="400" style="width:100%;max-height:400px;object-fit:cover;border-radius:10px;">
             </div>
             <div class="about-text">
                 <div class="section-title section-title-left">
@@ -121,7 +126,25 @@
 <section class="instagram-feed-section" style="padding: 40px 0; background-color: var(--bg-light);">
     <div class="container">
         <div class="section-title"><h2>Sosyal Medyada Biz</h2></div>
-        <script src="https://elfsightcdn.com/platform.js" async></script>
         <div class="elfsight-app-9be38dfd-ae21-4171-b111-1f85e3eb8b13" data-elfsight-app-lazy></div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var widgetLoaded = false;
+                var loadWidget = function() {
+                    if (widgetLoaded) return;
+                    widgetLoaded = true;
+                    var script = document.createElement('script');
+                    script.src = "https://elfsightcdn.com/platform.js";
+                    script.defer = true;
+                    document.body.appendChild(script);
+                };
+                
+                window.addEventListener('scroll', loadWidget, { passive: true, once: true });
+                window.addEventListener('touchstart', loadWidget, { passive: true, once: true });
+                window.addEventListener('mousemove', loadWidget, { passive: true, once: true });
+                
+                setTimeout(loadWidget, 5000); // Kullanıcı hiçbir şey yapmazsa bile en geç 5 sn sonra yükle
+            });
+        </script>
     </div>
 </section>

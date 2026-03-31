@@ -1,0 +1,39 @@
+@model OdakMVC.Models.Entities.AdminKullanici
+@{
+    ViewData["Title"] = "Yönetici Düzenle";
+}
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h3><i class="fas fa-user-edit" style="color:var(--admin-accent);"></i> @ViewData["Title"]</h3>
+        <a asp-action="Index" class="btn-admin btn-admin-edit"><i class="fas fa-arrow-left"></i> Geri</a>
+    </div>
+
+    <form asp-action="Duzenle" method="post" class="admin-form">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="All" class="text-danger" style="margin-bottom:15px; color:#c62828;"></div>
+        
+        <input type="hidden" asp-for="Id" />
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+            <div class="form-group">
+                <label>Kullanıcı Adı *</label>
+                <input asp-for="KullaniciAdi" required />
+                <span asp-validation-for="KullaniciAdi" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label>Yeni Parola (Değiştirmek istemiyorsanız boş bırakın)</label>
+                <input asp-for="Sifre" type="password" value="" />
+            </div>
+        </div>
+
+        <div class="form-group" style="display:flex;align-items:center;gap:10px;">
+            <input asp-for="Aktif" type="checkbox" style="width:auto;margin:0;">
+            <label asp-for="Aktif" style="margin:0;">Aktif</label>
+        </div>
+
+        <button type="submit" class="btn-admin btn-admin-primary" style="padding:12px 30px;font-size:1rem;">
+            <i class="fas fa-save"></i> Güncelle
+        </button>
+    </form>
+</div>

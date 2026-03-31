@@ -1,0 +1,37 @@
+@model IEnumerable<OdakMVC.Models.Entities.AdminKullanici>
+@{
+    ViewData["Title"] = "Yöneticiler";
+}
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h3><i class="fas fa-user-shield" style="color:var(--admin-accent);"></i> @ViewData["Title"]</h3>
+        <a asp-action="Ekle" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Yeni Yönetici Ekle</a>
+    </div>
+
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Kullanıcı Adı</th>
+                <th>Durum</th>
+                <th style="text-align:right;">İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><strong>@item.KullaniciAdi</strong></td>
+                    <td><span class="@(item.Aktif ? "badge-aktif" : "badge-pasif")">@(item.Aktif ? "Aktif" : "Pasif")</span></td>
+                    <td style="text-align:right;">
+                        <a asp-action="Duzenle" asp-route-id="@item.Id" class="btn-admin btn-admin-edit"><i class="fas fa-edit"></i></a>
+                        @if(Model.Count() > 1) {
+                            <form asp-action="Sil" asp-route-id="@item.Id" method="post" style="display:inline;" onsubmit="return confirm('Silmek istediğinize emin misiniz?');">
+                                <button type="submit" class="btn-admin btn-admin-delete"><i class="fas fa-trash"></i></button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,4 +1,4 @@
-﻿@model AdminDashboardViewModel
+@model AdminDashboardViewModel
 @{
     ViewData["Title"] = "Dashboard";
 }
@@ -39,6 +39,8 @@
         <a asp-area="Admin" asp-controller="Yayin" asp-action="Ekle" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Yayın Ekle</a>
         <a asp-area="Admin" asp-controller="Ekip" asp-action="Ekle" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Ekip Üyesi Ekle</a>
         <a asp-area="Admin" asp-controller="Slider" asp-action="Ekle" class="btn-admin btn-admin-primary"><i class="fas fa-plus"></i> Slider Ekle</a>
+        <a asp-area="Admin" asp-controller="AdminKullanici" asp-action="Ekle" class="btn-admin btn-admin-primary" style="background-color:#1ba8a0;"><i class="fas fa-user-plus"></i> Yönetici Ekle</a>
+        <a asp-area="Admin" asp-controller="SiteAyar" asp-action="Index" class="btn-admin btn-admin-primary" style="background-color:#003054;"><i class="fas fa-cogs"></i> Site Ayarları</a>
         <a asp-area="Admin" asp-controller="Iletisim" asp-action="Index" class="btn-admin btn-admin-edit">
             <i class="fas fa-envelope"></i> Mesajlar (@Model.OkunmamisMesaj yeni)
         </a>

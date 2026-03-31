@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using OdakMVC.Data;
 
 namespace OdakMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class AuthController : Controller
     {
-        private readonly IConfiguration _config;
-        public AuthController(IConfiguration config) { _config = config; }
+        private readonly OdakDbContext _context;
+        public AuthController(OdakDbContext context) { _context = context; }
 
         [HttpGet]
         public IActionResult Giris()
@@ -20,17 +21,16 @@ namespace OdakMVC.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Giris(string kullaniciAdi, string sifre)
         {
-            var adminUser = _config["AdminSettings:Username"];
-            var adminPass = _config["AdminSettings:Password"];
+            var adminUser = _context.AdminKullanicilari.FirstOrDefault(a => a.KullaniciAdi == kullaniciAdi && a.Sifre == sifre && a.Aktif);
 
-            if (kullaniciAdi == adminUser && sifre == adminPass)
+            if (adminUser != null)
             {
                 HttpContext.Session.SetString("AdminGiris", "true");
-                HttpContext.Session.SetString("AdminAdi", kullaniciAdi);
+                HttpContext.Session.SetString("AdminAdi", adminUser.KullaniciAdi);
                 return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
             }
 
-            ModelState.AddModelError("", "Kullanici adi veya sifre yanlis.");
+            ModelState.AddModelError("", "Kullanıcı adı veya şifre yanlış veya hesap pasif.");
             return View();
         }
 

@@ -20,6 +20,7 @@ namespace OdakMVC.Areas.Admin.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Ekle(Etkinlik model, IFormFile? afisFile)
         {
+            if (!ModelState.IsValid) return View(model);
             if (afisFile != null && afisFile.Length > 0)
                 model.AfisGorseli = await GorselKaydet(afisFile, "etkinlikler");
 
@@ -40,6 +41,7 @@ namespace OdakMVC.Areas.Admin.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Duzenle(Etkinlik model, IFormFile? afisFile)
         {
+            if (!ModelState.IsValid) return View(model);
             if (afisFile != null && afisFile.Length > 0)
                 model.AfisGorseli = await GorselKaydet(afisFile, "etkinlikler");
 
@@ -70,3 +72,4 @@ namespace OdakMVC.Areas.Admin.Controllers
         }
     }
 }
+

@@ -20,6 +20,7 @@ namespace OdakMVC.Areas.Admin.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Ekle(EkipUyesi model, IFormFile? fotografFile)
         {
+            if (!ModelState.IsValid) return View(model);
             if (fotografFile != null && fotografFile.Length > 0)
                 model.FotografYolu = await GorselKaydet(fotografFile, "ekip");
 
@@ -39,6 +40,7 @@ namespace OdakMVC.Areas.Admin.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Duzenle(EkipUyesi model, IFormFile? fotografFile)
         {
+            if (!ModelState.IsValid) return View(model);
             if (fotografFile != null && fotografFile.Length > 0)
                 model.FotografYolu = await GorselKaydet(fotografFile, "ekip");
 
@@ -69,3 +71,4 @@ namespace OdakMVC.Areas.Admin.Controllers
         }
     }
 }
+

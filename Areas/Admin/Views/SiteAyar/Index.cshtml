@@ -1,0 +1,95 @@
+@model OdakMVC.Models.Entities.SiteAyar
+@{
+    ViewData["Title"] = "Site Genel Ayarları";
+}
+
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h3><i class="fas fa-cogs" style="color:var(--admin-accent);"></i> @ViewData["Title"]</h3>
+    </div>
+
+    <form asp-action="Index" method="post" enctype="multipart/form-data" class="admin-form">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="All" class="text-danger" style="color: #c62828; margin-bottom: 15px; background: #ffebee; padding: 10px; border-radius: 5px;"></div>
+        
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="LogoYolu" />
+        <input type="hidden" asp-for="FaviconYolu" />
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:20px;">
+            <div class="form-group">
+                <label>Site Başlığı *</label>
+                <input asp-for="SiteBaslik" required placeholder="Odak Düşünce Kulübü | Oku, Düşün...">
+            </div>
+            
+            <div class="form-group">
+                <label>E-posta Adresi</label>
+                <input asp-for="Email" type="email">
+            </div>
+
+            <div class="form-group">
+                <label>Telefon Numarası</label>
+                <input asp-for="Telefon" placeholder="+90 552 272 25 63">
+            </div>
+
+            <div class="form-group">
+                <label>WhatsApp Numarası (Sadece Rakam)</label>
+                <input asp-for="WhatsAppNo" placeholder="905522722563">
+            </div>
+            
+            <div class="form-group">
+                <label>Açık Adres</label>
+                <input asp-for="Adres">
+            </div>
+        </div>
+
+        <h4 style="margin: 20px 0 10px 0; color: var(--admin-primary); border-bottom: 1px solid #ddd; padding-bottom: 5px;">Sosyal Medya Linkleri</h4>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+            <div class="form-group"><label>Instagram URL</label><input asp-for="Instagram"></div>
+            <div class="form-group"><label>Twitter (X) URL</label><input asp-for="Twitter"></div>
+            <div class="form-group"><label>YouTube URL</label><input asp-for="Youtube"></div>
+            <div class="form-group"><label>Facebook URL</label><input asp-for="Facebook"></div>
+            <div class="form-group"><label>NSosyal URL</label><input asp-for="NSosyal"></div>
+        </div>
+
+        <h4 style="margin: 20px 0 10px 0; color: var(--admin-primary); border-bottom: 1px solid #ddd; padding-bottom: 5px;">Açıklamalar ve Medya</h4>
+        
+        <div class="form-group">
+            <label>SEO Site Açıklaması (Description)</label>
+            <textarea asp-for="SiteAciklama" style="min-height:80px;"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Footer Kısa Açıklaması</label>
+            <textarea asp-for="FooterAciklama" style="min-height:80px;"></textarea>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+            <div class="form-group">
+                <label>Yeni Ana Logo Yükle</label>
+                <input type="file" name="logoFile" accept="image/*">
+                @if (!string.IsNullOrEmpty(Model.LogoYolu))
+                {
+                    <div style="margin-top:10px; background:#003054; padding:10px; width:fit-content; border-radius:8px;">
+                        <img src="@Model.LogoYolu" style="height:40px; filter:brightness(0) invert(1);">
+                    </div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label>Yeni Favicon Yükle (Tarayıcı Sekme Logosu)</label>
+                <input type="file" name="faviconFile" accept="image/*">
+                @if (!string.IsNullOrEmpty(Model.FaviconYolu))
+                {
+                    <div style="margin-top:10px; padding:10px; border:1px solid #ddd; width:fit-content; border-radius:8px;">
+                        <img src="@Model.FaviconYolu" style="height:32px;">
+                    </div>
+                }
+            </div>
+        </div>
+
+        <button type="submit" class="btn-admin btn-admin-primary" style="margin-top:20px; padding:12px 30px; font-size:1rem;">
+            <i class="fas fa-save"></i> Ayarları Kaydet
+        </button>
+    </form>
+</div>

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using OdakMVC.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,7 +50,14 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        // 1 yillik onbellek (31536000 saniye)
+        ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=31536000");
+    }
+});
 app.UseRouting();
 app.UseSession();
 app.UseAuthorization();

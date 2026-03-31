@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OdakMVC.Data;
 
@@ -11,9 +12,11 @@ using OdakMVC.Data;
 namespace OdakMVC.Migrations
 {
     [DbContext(typeof(OdakDbContext))]
-    partial class OdakDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260331083236_AddSiteAyarVeAdminTable")]
+    partial class AddSiteAyarVeAdminTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

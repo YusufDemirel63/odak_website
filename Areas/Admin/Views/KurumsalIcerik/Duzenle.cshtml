@@ -7,6 +7,7 @@
     </div>
     <form asp-action="Duzenle" method="post" enctype="multipart/form-data" class="admin-form">
         @Html.AntiForgeryToken()
+        <div asp-validation-summary="All" class="text-danger" style="margin-bottom:15px; padding:10px; background:#ffebee; color:#c62828; border-radius:5px;"></div>
         <input type="hidden" asp-for="Id">
         <input type="hidden" asp-for="Anahtar">
         <div class="form-group"><label>Sayfa Görünen Baslik *</label><input asp-for="Baslik"></div>
@@ -20,3 +21,4 @@
         <button type="submit" class="btn-admin btn-admin-primary" style="padding:12px 30px;font-size:1rem;"><i class="fas fa-save"></i> Guncelle</button>
     </form>
 </div>
+

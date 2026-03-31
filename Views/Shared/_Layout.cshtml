@@ -1,48 +1,55 @@
-﻿<!DOCTYPE html>
+@inject OdakMVC.Data.OdakDbContext _context
+@{
+    var siteAyar = _context.SiteAyarlari.FirstOrDefault();
+}
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="@ViewData["Description"] ?? "Odak Düşünce Kulübü; gençlerin zihinsel gelişimine katkıda bulunan okuma, düşünme, araştırma ve keşfetme odaklı bir sivil toplum inisiyatifidir."">
+    <meta name="description" content="@(siteAyar?.SiteAciklama ?? (ViewData["Description"]?.ToString() ?? "Odak Düşünce Kulübü"))">
     <meta name="keywords" content="Odak, Düşünce Kulübü, Oku, Düşün, Araştır, Keşfet, Sivil Toplum, Eğitim, Gençlik">
     <meta name="author" content="Odak Düşünce Kulübü">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="@(ViewData["Title"] ?? "Odak Düşünce Kulübü") | Oku, Düşün, Araştır, Keşfet">
-    <meta property="og:description" content="Zihinsel gelişim ve toplumsal farkındalık için doğru odak noktasındasınız.">
-    <meta property="og:image" content="/gorseller/OdakLogo.svg">
+    <meta property="og:title" content="@((ViewData["Title"] ?? siteAyar?.SiteBaslik) ?? "Odak Düşünce Kulübü")">
+    <meta property="og:description" content="@(siteAyar?.SiteAciklama ?? "Zihinsel gelişim ve toplumsal farkındalık için doğru odak noktasındasınız.")">
+    <meta property="og:image" content="@(!string.IsNullOrEmpty(siteAyar?.LogoYolu) ? siteAyar.LogoYolu : "/gorseller/OdakLogo.svg")">
     <meta property="og:url" content="https://odakdusuncekulubu.com/">
     <meta property="og:type" content="website">
 
-    <title>@(ViewData["Title"] ?? "Odak Düşünce Kulübü") | Oku, Düşün, Araştır, Keşfet</title>
+    <title>@((ViewData["Title"] ?? siteAyar?.SiteBaslik) ?? "Odak Düşünce Kulübü")</title>
 
-    <link rel="icon" type="image/svg+xml" href="/gorseller/OdakLogo.svg">
+    <link rel="icon" type="image/svg+xml" href="@(!string.IsNullOrEmpty(siteAyar?.FaviconYolu) ? siteAyar.FaviconYolu : "/gorseller/OdakLogo.svg")?v=2">
     <link rel="canonical" href="https://odakdusuncekulubu.com/">
     <link rel="stylesheet" href="~/css/site.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     @await RenderSectionAsync("Styles", required: false)
+    @if (ViewData["HeroImage"] != null)
+    {
+        <link rel="preload" as="image" href="@ViewData["HeroImage"]" />
+    }
 </head>
-@inject OdakMVC.Data.OdakDbContext _context
 <body>
     <!-- HEADER -->
     <header class="row">
         <div class="col-12 header-container">
             <div class="col-4 header-left">
-                <a href="mailto:odakdusuncekulubu@gmail.com" class="header-email">
+                <a href="mailto:@(siteAyar?.Email ?? "odakdusuncekulubu@gmail.com")" class="header-email">
                     <i class="fas fa-envelope"></i>
-                    <span>odakdusuncekulubu@gmail.com</span>
+                    <span>@(siteAyar?.Email ?? "odakdusuncekulubu@gmail.com")</span>
                 </a>
             </div>
             <div class="col-4 header-center">
                 <p class="header-slogan">Oku, Düşün, Araştır, Keşfet</p>
             </div>
             <div class="col-4 header-right">
-                <a href="https://www.instagram.com/odakdusuncekulubu/" title="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-                <a href="https://x.com/odakdusunceklb" title="X (Twitter)" target="_blank"><i class="fab fa-x-twitter"></i></a>
-                <a href="https://www.youtube.com/@@odakdusuncekulubu" title="YouTube" target="_blank"><i class="fab fa-youtube"></i></a>
-                <a href="https://www.facebook.com/people/Odak-Kul%C3%BCb%C3%BC/pfbid0tw6mVHQTte16a38mhcEKpLSfLPZxk76HoAaC59HfS7mTmc8tefmSuUEAmfyNDbVwl/" title="Facebook" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="https://nsosyal.com/odakdusuncekulubu" title="NSosyal" target="_blank"><img src="/gorseller/NSosyalLogo.svg" alt="NSosyal"></a>
+                @if(!string.IsNullOrEmpty(siteAyar?.Instagram)) { <a href="@siteAyar.Instagram" title="Instagram" target="_blank"><i class="fab fa-instagram"></i></a> }
+                @if(!string.IsNullOrEmpty(siteAyar?.Twitter)) { <a href="@siteAyar.Twitter" title="X (Twitter)" target="_blank"><i class="fab fa-x-twitter"></i></a> }
+                @if(!string.IsNullOrEmpty(siteAyar?.Youtube)) { <a href="@siteAyar.Youtube" title="YouTube" target="_blank"><i class="fab fa-youtube"></i></a> }
+                @if(!string.IsNullOrEmpty(siteAyar?.Facebook)) { <a href="@siteAyar.Facebook" title="Facebook" target="_blank"><i class="fa-brands fa-facebook-f"></i></a> }
+                @if(!string.IsNullOrEmpty(siteAyar?.NSosyal)) { <a href="@siteAyar.NSosyal" title="NSosyal" target="_blank"><img src="/gorseller/NSosyalLogo.svg" alt="NSosyal"></a> }
             </div>
         </div>
     </header>
@@ -52,7 +59,7 @@
         <div class="nav-container">
             <div class="nav-logo">
                 <a asp-controller="Home" asp-action="Index">
-                    <img src="/gorseller/OdakLogo.svg" alt="Odak Logo">
+                    <img src="@(!string.IsNullOrEmpty(siteAyar?.LogoYolu) ? siteAyar.LogoYolu : "/gorseller/OdakLogo.svg")" alt="Odak Logo">
                 </a>
             </div>
             <button class="mobile-menu-btn" aria-label="Menü">
@@ -109,9 +116,11 @@
     @RenderBody()
 
     <!-- WhatsApp Butonu -->
-    <a href="https://wa.me/905522722563" class="whatsapp-btn" target="_blank" aria-label="WhatsApp">
-        <i class="fab fa-whatsapp"></i>
-    </a>
+    @if(!string.IsNullOrEmpty(siteAyar?.WhatsAppNo)) {
+        <a href="https://wa.me/@siteAyar.WhatsAppNo" class="whatsapp-btn" target="_blank" aria-label="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    }
 
     <!-- Yukarı Çık Butonu -->
     <a href="#" class="scroll-top-btn" aria-label="Yukarı Çık">
@@ -124,13 +133,13 @@
             <div class="footer-grid">
                 <div class="footer-col">
                     <h4>ODAK</h4>
-                    <p>Zihinsel gelişim ve toplumsal farkındalık için doğru odak noktasındasınız. Bizi takip etmeye devam edin.</p>
+                    <p>@(siteAyar?.FooterAciklama ?? "Zihinsel gelişim ve toplumsal farkındalık için doğru odak noktasındasınız. Bizi takip etmeye devam edin.")</p>
                     <div style="margin-top: 15px; display: flex; gap: 15px;">
-                        <a href="https://www.instagram.com/odakdusuncekulubu/" style="color: #fff; font-size: 1.3rem;" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="https://x.com/odakdusunceklb" style="color: #fff; font-size: 1.3rem;" target="_blank" title="X (Twitter)"><i class="fab fa-x-twitter"></i></a>
-                        <a href="https://www.youtube.com/@@odakdusuncekulubu" style="color: #fff; font-size: 1.3rem;" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
-                        <a href="https://www.facebook.com/people/Odak-Kul%C3%BCb%C3%BC/pfbid0tw6mVHQTte16a38mhcEKpLSfLPZxk76HoAaC59HfS7mTmc8tefmSuUEAmfyNDbVwl/" style="color: #fff; font-size: 1.3rem;" target="_blank" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="https://nsosyal.com/odakdusuncekulubu" style="color: #fff; font-size: 1.3rem;" target="_blank" title="NSosyal"><img src="/gorseller/NSosyalLogo.svg" alt="NSosyal" style="height: 1.3rem; filter: brightness(0) invert(1);"></a>
+                        @if(!string.IsNullOrEmpty(siteAyar?.Instagram)) { <a href="@siteAyar.Instagram" style="color: #fff; font-size: 1.3rem;" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a> }
+                        @if(!string.IsNullOrEmpty(siteAyar?.Twitter)) { <a href="@siteAyar.Twitter" style="color: #fff; font-size: 1.3rem;" target="_blank" title="X (Twitter)"><i class="fab fa-x-twitter"></i></a> }
+                        @if(!string.IsNullOrEmpty(siteAyar?.Youtube)) { <a href="@siteAyar.Youtube" style="color: #fff; font-size: 1.3rem;" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a> }
+                        @if(!string.IsNullOrEmpty(siteAyar?.Facebook)) { <a href="@siteAyar.Facebook" style="color: #fff; font-size: 1.3rem;" target="_blank" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a> }
+                        @if(!string.IsNullOrEmpty(siteAyar?.NSosyal)) { <a href="@siteAyar.NSosyal" style="color: #fff; font-size: 1.3rem;" target="_blank" title="NSosyal"><img src="/gorseller/NSosyalLogo.svg" alt="NSosyal" style="height: 1.3rem; filter: brightness(0) invert(1);"></a> }
                     </div>
                 </div>
                 <div class="footer-col">
@@ -153,9 +162,9 @@
                 </div>
                 <div class="footer-col">
                     <h4>Bize Ulaşın</h4>
-                    <p><i class="fas fa-map-marker-alt"></i> Adana, Türkiye</p>
-                    <p><i class="fas fa-envelope"></i> odakdusuncekulubu@gmail.com</p>
-                    <p><i class="fas fa-phone"></i> +90 552 272 25 63</p>
+                    <p><i class="fas fa-map-marker-alt"></i> @(siteAyar?.Adres ?? "Adana, Türkiye")</p>
+                    <p><i class="fas fa-envelope"></i> @(siteAyar?.Email ?? "odakdusuncekulubu@gmail.com")</p>
+                    <p><i class="fas fa-phone"></i> @(siteAyar?.Telefon ?? "+90 552 272 25 63")</p>
                 </div>
             </div>
             <div class="footer-bottom">
