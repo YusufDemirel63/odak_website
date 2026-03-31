@@ -1,4 +1,4 @@
-﻿@model Etkinlik
+@model Etkinlik
 @{
     ViewData["Title"] = Model.Id == 0 ? "Yeni Etkinlik" : "Etkinlik Duzenle";
     var isEdit = Model.Id != 0;
@@ -11,7 +11,7 @@
     <form asp-action="@(isEdit ? "Duzenle" : "Ekle")" method="post" enctype="multipart/form-data" class="admin-form">
         @Html.AntiForgeryToken()
         <div asp-validation-summary="All" class="text-danger" style="margin-bottom:15px; padding:10px; background:#ffebee; color:#c62828; border-radius:5px;"></div>
-        @if (isEdit) { <input type="hidden" asp-for="Id"> }
+        @if (isEdit) { <input type="hidden" asp-for="Id"> <input type="hidden" asp-for="OlusturulmaTarihi"> }
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
             <div class="form-group">
                 <label>Başlık *</label>
