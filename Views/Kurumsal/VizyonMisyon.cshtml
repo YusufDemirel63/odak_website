@@ -1,37 +1,51 @@
-﻿@{
+@{
     var vizyon = ViewBag.Vizyon as OdakMVC.Models.Entities.IcerikSayfasi;
     var misyon = ViewBag.Misyon as OdakMVC.Models.Entities.IcerikSayfasi;
     ViewData["Title"] = "Vizyon & Misyon";
 }
 <section class="page-header" style="background: linear-gradient(rgba(0,48,84,0.85), rgba(0,48,84,0.95)), url('/gorseller/sliders/2.png'); background-size:cover; background-position:center; padding: 80px 0; text-align: center;">
     <div class="container">
-        <h1 style="color:#fff; font-size: 2.5rem; margin-bottom: 15px;">Vizyon & Misyon</h1>
+        <h1 style="color:#fff; font-size: 2.5rem; margin-bottom: 15px;">Vizyon &amp; Misyon</h1>
         <p style="color: rgba(255,255,255,0.85); font-size: 1.1rem;">Kulübümüzün temel ilkeleri ve varlık gayesi.</p>
     </div>
 </section>
 
-<section class="vision-mission" style="padding: 60px 0;">
+<section class="vision-mission" style="padding: 60px 0; background: #f8fafc;">
     <div class="container">
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:40px;">
-            <div style="background:#fff; padding:40px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.05);">
-                <div style="text-align:center; color:var(--accent-color); font-size:3rem; margin-bottom:20px;">
+        <div style="display:flex; flex-direction:column; gap:40px; max-width:900px; margin:0 auto;">
+
+            @* VİZYON *@
+            <div style="background:#fff; padding:50px 45px; border-radius:16px; box-shadow:0 8px 30px rgba(0,0,0,0.07); border-left:5px solid var(--primary-color); position:relative; overflow:hidden;">
+                <div style="position:absolute; top:-20px; right:-20px; font-size:8rem; color:rgba(241,90,57,0.06); pointer-events:none;">
                     <i class="fas fa-eye"></i>
                 </div>
-                <h2 style="text-align:center; color:var(--primary-color); margin-bottom:20px;">@(vizyon?.Baslik ?? "Vizyon")</h2>
-                <div style="font-size:1.05rem; line-height:1.8; color:var(--text-dark);">
-                    @Html.Raw(vizyon?.Icerik?.Replace("\n", "<br/>") ?? "Icerik girilmedi.")
+                <div style="display:flex; align-items:center; gap:18px; margin-bottom:25px;">
+                    <div style="width:55px; height:55px; border-radius:12px; background:linear-gradient(135deg,var(--primary-color),#e04530); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <i class="fas fa-eye" style="font-size:1.4rem; color:#fff;"></i>
+                    </div>
+                    <h2 style="font-size:1.8rem; font-weight:700; color:var(--secondary-color); margin:0;">@(vizyon?.Baslik ?? "Vizyonumuz")</h2>
+                </div>
+                <div style="font-size:1.08rem; line-height:1.9; color:#374151;">
+                    @Html.Raw(vizyon?.Icerik?.Replace("\n", "<br/>") ?? "İçerik girilmedi.")
                 </div>
             </div>
 
-            <div style="background:#fff; padding:40px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.05);">
-                <div style="text-align:center; color:var(--accent-color); font-size:3rem; margin-bottom:20px;">
+            @* MİSYON *@
+            <div style="background:#fff; padding:50px 45px; border-radius:16px; box-shadow:0 8px 30px rgba(0,0,0,0.07); border-left:5px solid var(--secondary-color); position:relative; overflow:hidden;">
+                <div style="position:absolute; top:-20px; right:-20px; font-size:8rem; color:rgba(0,48,84,0.05); pointer-events:none;">
                     <i class="fas fa-bullseye"></i>
                 </div>
-                <h2 style="text-align:center; color:var(--primary-color); margin-bottom:20px;">@(misyon?.Baslik ?? "Misyon")</h2>
-                <div style="font-size:1.05rem; line-height:1.8; color:var(--text-dark);">
-                    @Html.Raw(misyon?.Icerik?.Replace("\n", "<br/>") ?? "Icerik girilmedi.")
+                <div style="display:flex; align-items:center; gap:18px; margin-bottom:25px;">
+                    <div style="width:55px; height:55px; border-radius:12px; background:linear-gradient(135deg,var(--secondary-color),#004d85); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <i class="fas fa-bullseye" style="font-size:1.4rem; color:#fff;"></i>
+                    </div>
+                    <h2 style="font-size:1.8rem; font-weight:700; color:var(--secondary-color); margin:0;">@(misyon?.Baslik ?? "Misyonumuz")</h2>
+                </div>
+                <div style="font-size:1.08rem; line-height:1.9; color:#374151;">
+                    @Html.Raw(misyon?.Icerik?.Replace("\n", "<br/>") ?? "İçerik girilmedi.")
                 </div>
             </div>
+
         </div>
     </div>
 </section>

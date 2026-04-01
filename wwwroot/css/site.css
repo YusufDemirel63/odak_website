@@ -1651,3 +1651,39 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ==================== SONRADAN EKLENEN ILAVE VE DUZELTMELER ==================== */
+.whatsapp-btn {
+    left: auto !important;
+    right: 30px !important;
+}
+
+.scroll-top-btn {
+    left: auto !important;
+    right: 30px !important;
+    bottom: 95px !important;
+}
+
+/* Mobil menu dropdown click fix */
+@media (max-width: 991px) {
+    /* Eski hover olayini ezmek icin */
+    .nav-item.dropdown:hover .dropdown-menu {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transform: translateY(10px) !important;
+        display: none !important;
+    }
+    
+    /* Javascript ile eklenecek active sinifinda goster */
+    .nav-item.dropdown.mobile-active .dropdown-menu {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+        position: static !important;
+        box-shadow: none !important;
+        margin-top: 5px !important;
+        display: block !important;
+        background: #f8fafc !important;
+        border-radius: 8px !important;
+    }
+}

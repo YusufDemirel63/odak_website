@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OdakMVC.Data;
 using OdakMVC.Models.Entities;
@@ -9,6 +9,8 @@ namespace OdakMVC.Areas.Admin.Controllers
     {
         private readonly OdakDbContext _context;
         private readonly IWebHostEnvironment _env;
+        private const long MaxDosyaBoyutu = 10 * 1024 * 1024; // 10 MB
+
         public EgitimController(OdakDbContext context, IWebHostEnvironment env)
         { _context = context; _env = env; }
 
@@ -20,6 +22,8 @@ namespace OdakMVC.Areas.Admin.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Ekle(Egitim model, IFormFile? gorselFile)
         {
+            if (gorselFile != null && gorselFile.Length > MaxDosyaBoyutu)
+                ModelState.AddModelError("", "Görsel boyutu 10MB'dan küçük olmalıdır.");
             if (!ModelState.IsValid) return View(model);
             if (gorselFile != null && gorselFile.Length > 0)
                 model.GorselYolu = await GorselKaydet(gorselFile, "egitimler");
@@ -27,7 +31,7 @@ namespace OdakMVC.Areas.Admin.Controllers
             model.OlusturulmaTarihi = DateTime.Now;
             _context.Egitimler.Add(model);
             await _context.SaveChangesAsync();
-            TempData["Mesaj"] = "Egitim basariyla eklendi.";
+            TempData["Mesaj"] = "Eğitim başarıyla eklendi.";
             return RedirectToAction("Index");
         }
 
@@ -41,13 +45,15 @@ namespace OdakMVC.Areas.Admin.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Duzenle(Egitim model, IFormFile? gorselFile)
         {
+            if (gorselFile != null && gorselFile.Length > MaxDosyaBoyutu)
+                ModelState.AddModelError("", "Görsel boyutu 10MB'dan küçük olmalıdır.");
             if (!ModelState.IsValid) return View(model);
             if (gorselFile != null && gorselFile.Length > 0)
                 model.GorselYolu = await GorselKaydet(gorselFile, "egitimler");
 
             _context.Egitimler.Update(model);
             await _context.SaveChangesAsync();
-            TempData["Mesaj"] = "Egitim guncellendi.";
+            TempData["Mesaj"] = "Eğitim başarıyla güncellendi.";
             return RedirectToAction("Index");
         }
 
@@ -56,7 +62,7 @@ namespace OdakMVC.Areas.Admin.Controllers
         {
             var e = await _context.Egitimler.FindAsync(id);
             if (e != null) { _context.Egitimler.Remove(e); await _context.SaveChangesAsync(); }
-            TempData["Mesaj"] = "Egitim silindi.";
+            TempData["Mesaj"] = "Eğitim silindi.";
             return RedirectToAction("Index");
         }
 
@@ -72,4 +78,3 @@ namespace OdakMVC.Areas.Admin.Controllers
         }
     }
 }
-

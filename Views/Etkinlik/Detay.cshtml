@@ -1,4 +1,4 @@
-﻿@model EtkinlikDetayViewModel
+@model EtkinlikDetayViewModel
 @{
     ViewData["Title"] = Model.Etkinlik.Baslik;
 }
@@ -17,7 +17,7 @@
                 <div style="margin-bottom:20px; font-size:16px; color:#555;">
                     @if (Model.Etkinlik.Tarih.HasValue)
                     {
-                        <p style="margin-bottom:10px;"><i class="fas fa-calendar-alt" style="color:var(--primary-color); width:25px;"></i> <strong>Tarih:</strong> @Model.Etkinlik.Tarih.Value.ToString("dd MMMM yyyy")</p>
+                        <p style="margin-bottom:10px;"><i class="fas fa-calendar-alt" style="color:var(--primary-color); width:25px;"></i> <strong>Tarih:</strong> @Model.Etkinlik.Tarih.Value.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))</p>
                     }
                     @if (!string.IsNullOrEmpty(Model.Etkinlik.Saat))
                     {

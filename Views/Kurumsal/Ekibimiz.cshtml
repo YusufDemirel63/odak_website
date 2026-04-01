@@ -9,28 +9,54 @@
 }
 
 <style>
-    :root { --line-color: #cbd5e1; }
-    .org-chart-wrapper { display: flex; flex-direction: column; align-items: center; padding: 40px 15px; background-color: #f8fafc; }
-    .org-node { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; width: 220px; border-top: 4px solid var(--primary-color); z-index: 2; position: relative; }
-    .org-node img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; background:#e2e8f0; }
-    .org-node i.fa-user { font-size: 2.5rem; color: #94a3b8; display: block; margin-bottom: 15px; height: 90px; width: 90px; line-height:90px; background:#f1f5f9; border-radius: 50%; margin: 0 auto 12px; }
-    .org-node h3 { font-size: 1.05rem; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
-    .org-node p { font-size: 0.8rem; color: #e74c3c; font-weight: 600; margin: 0; }
-    .org-socials { margin-top: 10px; display: flex; justify-content: center; gap: 8px; }
-    .org-socials a { color: #94a3b8; font-size: 0.85rem; transition: color 0.3s; }
-    .org-socials a:hover { color: var(--primary-color); }
-    
-    .org-tier { display: flex; justify-content: center; gap: 40px; margin-bottom: 40px; position: relative; flex-wrap: wrap; }
-    .org-section-title { font-size: 1.4rem; color: var(--primary-color); font-weight: 700; display: block; width: 100%; text-align: center; margin-bottom: 30px; position: relative; padding-bottom: 10px; }
-    .org-section-title::after { content: ''; width: 50px; height: 3px; background: #e74c3c; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
+    .org-chart-wrapper { display:flex; flex-direction:column; align-items:center; padding:40px 15px; background-color:#f8fafc; }
+    .org-node {
+        background:#fff; padding:22px 20px; border-radius:14px;
+        box-shadow:0 5px 20px rgba(0,0,0,0.06); text-align:center;
+        width:220px; border-top:4px solid var(--primary-color);
+        position:relative; transition:transform 0.2s ease, box-shadow 0.2s ease;
+        text-decoration:none; display:block; color:inherit;
+    }
+    .org-node:hover { transform:translateY(-4px); box-shadow:0 12px 30px rgba(0,0,0,0.12); }
+    .org-node img { width:90px; height:90px; border-radius:50%; object-fit:cover; margin-bottom:12px; background:#e2e8f0; }
+    .org-node .org-avatar { font-size:2.2rem; color:#94a3b8; display:flex; align-items:center; justify-content:center;
+        margin:0 auto 12px; height:90px; width:90px; background:#f1f5f9; border-radius:50%; }
+    .org-node h3 { font-size:1rem; font-weight:700; color:#1e293b; margin-bottom:4px; }
+    .org-node p { font-size:0.78rem; color:var(--primary-color); font-weight:600; margin:0; }
 
-    /* Units Grid */
-    .units-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; width: 100%; max-width: 1200px; margin: 0 auto; align-items: start; }
-    .unit-column { display: flex; flex-direction: column; gap: 20px; }
-    .unit-header-card { background: #fff; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); padding: 25px 20px; display: flex; align-items: center; gap: 15px; }
-    .unit-header-card .icon-box { background: #fff0ed; color: #e74c3c; width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
-    .unit-header-card .unit-info h4 { font-size: 1.05rem; font-weight: 700; color: var(--primary-color); margin: 0 0 5px 0; }
-    .unit-header-card .unit-info p { font-size: 0.75rem; color: #64748b; margin: 0; line-height: 1.3; }
+    .org-tier { display:flex; justify-content:center; gap:30px; margin-bottom:35px; flex-wrap:wrap; }
+    .org-section-title { font-size:1.35rem; color:var(--secondary-color); font-weight:700; display:block;
+        width:100%; text-align:center; margin-bottom:25px; position:relative; padding-bottom:12px; }
+    .org-section-title::after { content:''; width:50px; height:3px; background:var(--primary-color);
+        position:absolute; bottom:0; left:50%; transform:translateX(-50%); border-radius:2px; }
+
+    /* Birimler */
+    .units-wrapper { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:28px; width:100%; max-width:1200px; margin:0 auto; }
+    .unit-column { display:flex; flex-direction:column; gap:14px; }
+    .unit-header-card { background:#fff; border-radius:14px; box-shadow:0 5px 18px rgba(0,0,0,0.06);
+        padding:22px 18px; display:flex; align-items:center; gap:14px;
+        border-top:3px solid var(--primary-color); }
+    .unit-header-card .icon-box { background:rgba(241,90,57,0.1); color:var(--primary-color); width:48px; height:48px;
+        border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; }
+    .unit-header-card .unit-info h4 { font-size:1rem; font-weight:700; color:var(--secondary-color); margin:0 0 4px 0; }
+    .unit-header-card .unit-info p { font-size:0.75rem; color:#64748b; margin:0; line-height:1.3; }
+    .unit-member-card { background:#fff; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.04);
+        padding:14px 16px; display:flex; align-items:center; gap:14px;
+        text-decoration:none; color:inherit; transition:transform 0.2s ease, box-shadow 0.2s ease;
+        border-left:3px solid transparent; }
+    .unit-member-card:hover { transform:translateX(4px); box-shadow:0 6px 20px rgba(0,0,0,0.1); border-left-color:var(--primary-color); }
+    .unit-member-card img { width:48px; height:48px; border-radius:50%; object-fit:cover; flex-shrink:0; background:#f1f5f9; }
+    .unit-member-card .ava { width:48px; height:48px; border-radius:50%; background:#f1f5f9; flex-shrink:0;
+        display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:1.1rem; }
+    .unit-member-card .info h5 { font-size:0.9rem; font-weight:600; color:#1e293b; margin:0 0 2px 0; }
+    .unit-member-card .info p { font-size:0.75rem; color:#64748b; margin:0; }
+
+    @@media (max-width:768px) {
+        .org-node { width:160px; padding:16px 12px; }
+        .org-node img, .org-node .org-avatar { width:70px; height:70px; }
+        .org-tier { gap:15px; }
+        .units-wrapper { grid-template-columns:1fr; }
+    }
 </style>
 
 <section class="page-header" style="background: linear-gradient(rgba(0,48,84,0.85), rgba(0,48,84,0.95)), url('/gorseller/sliders/1.png'); background-size:cover; background-position:center; padding: 80px 0; text-align: center;">
@@ -41,65 +67,70 @@
 </section>
 
 <section class="org-chart-wrapper">
-    <div class="container" style="display: flex; flex-direction: column; align-items: center;">
+    <div class="container" style="display: flex; flex-direction: column; align-items: center; width:100%;">
 
-        <!-- TIER 1: Başkanlık -->
-        @if(baskan != null) {
-            <div class="org-tier">
-                <div class="org-node">
-                    @if(!string.IsNullOrEmpty(baskan.FotografYolu)) { <img src="@baskan.FotografYolu" alt="@baskan.AdSoyad"> } else { <i class="fas fa-user"></i> }
+        @* TIER 1: Başkanlık *@
+        @if (baskan != null)
+        {
+            <div class="org-tier" style="margin-bottom:30px;">
+                <a asp-controller="Kurumsal" asp-action="EkipDetay" asp-route-id="@baskan.Id" class="org-node">
+                    @if (!string.IsNullOrEmpty(baskan.FotografYolu))
+                    { <img src="@baskan.FotografYolu" alt="@baskan.AdSoyad"> }
+                    else { <div class="org-avatar"><i class="fas fa-user"></i></div> }
                     <h3>@baskan.AdSoyad</h3>
                     <p>@baskan.Gorev</p>
-                    <div class="org-socials">
-                        @if(!string.IsNullOrEmpty(baskan.LinkedInUrl)){<a href="@baskan.LinkedInUrl" target="_blank"><i class="fab fa-linkedin-in"></i></a>}
-                        @if(!string.IsNullOrEmpty(baskan.TwitterUrl)){<a href="@baskan.TwitterUrl" target="_blank"><i class="fab fa-twitter"></i></a>}
-                        @if(!string.IsNullOrEmpty(baskan.Email)){<a href="mailto:@baskan.Email"><i class="fas fa-envelope"></i></a>}
-                    </div>
-                </div>
+                </a>
             </div>
         }
 
-        <!-- TIER 2: Başkan Yardımcıları -->
-        @if(baskanYardimcilari.Any()) {
-            <div class="org-tier" style="margin-top:-10px;">
-                @foreach(var yrd in baskanYardimcilari) {
-                    <div class="org-node" style="border-top-color:#e74c3c;">
-                        @if(!string.IsNullOrEmpty(yrd.FotografYolu)) { <img src="@yrd.FotografYolu" alt="@yrd.AdSoyad"> } else { <i class="fas fa-user"></i> }
+        @* TIER 2: Başkan Yardımcıları *@
+        @if (baskanYardimcilari.Any())
+        {
+            <div class="org-tier" style="margin-bottom:35px;">
+                @foreach (var yrd in baskanYardimcilari)
+                {
+                    <a asp-controller="Kurumsal" asp-action="EkipDetay" asp-route-id="@yrd.Id" class="org-node" style="border-top-color:#e74c3c;">
+                        @if (!string.IsNullOrEmpty(yrd.FotografYolu))
+                        { <img src="@yrd.FotografYolu" alt="@yrd.AdSoyad"> }
+                        else { <div class="org-avatar"><i class="fas fa-user"></i></div> }
                         <h3>@yrd.AdSoyad</h3>
-                        <p style="color:var(--primary-color);">@yrd.Gorev</p>
-                        <div class="org-socials">
-                            @if(!string.IsNullOrEmpty(yrd.LinkedInUrl)){<a href="@yrd.LinkedInUrl"><i class="fab fa-linkedin-in"></i></a>}
-                            @if(!string.IsNullOrEmpty(yrd.Email)){<a href="mailto:@yrd.Email"><i class="fas fa-envelope"></i></a>}
-                        </div>
-                    </div>
+                        <p>@yrd.Gorev</p>
+                    </a>
                 }
             </div>
         }
 
-        <!-- TIER 3: Yönetim Kurulu -->
-        @if(yonetimKurulu.Any()) {
-            <div style="margin-top:20px; width:100%;">
+        @* TIER 3: Yönetim Kurulu *@
+        @if (yonetimKurulu.Any())
+        {
+            <div style="margin-top:10px; width:100%; margin-bottom:50px;">
                 <h2 class="org-section-title">Yönetim Kurulu</h2>
-                <div class="org-tier" style="gap:25px; margin-bottom:60px;">
-                    @foreach(var yk in yonetimKurulu) {
-                        <div class="org-node" style="border-top:none; box-shadow:0 3px 15px rgba(0,0,0,0.03);">
-                            @if(!string.IsNullOrEmpty(yk.FotografYolu)) { <img src="@yk.FotografYolu" alt="@yk.AdSoyad"> } else { <i class="fas fa-user"></i> }
+                <div class="org-tier" style="gap:20px;">
+                    @foreach (var yk in yonetimKurulu)
+                    {
+                        <a asp-controller="Kurumsal" asp-action="EkipDetay" asp-route-id="@yk.Id" class="org-node" style="border-top:none; box-shadow:0 3px 12px rgba(0,0,0,0.05);">
+                            @if (!string.IsNullOrEmpty(yk.FotografYolu))
+                            { <img src="@yk.FotografYolu" alt="@yk.AdSoyad"> }
+                            else { <div class="org-avatar"><i class="fas fa-user"></i></div> }
                             <h3>@yk.AdSoyad</h3>
-                            <p>@yk.Gorev</p>
-                        </div>
+                            <p style="color:var(--secondary-color);">@yk.Gorev</p>
+                        </a>
                     }
                 </div>
             </div>
         }
 
-        <!-- TIER 4: Birimler -->
-        @if(birimler.Any()) {
+        @* TIER 4: Birimler — kişi hem yönetimde hem birimde olabilir *@
+        @if (birimler.Any())
+        {
             <div style="width:100%;">
-                <h2 class="org-section-title">Koordinatörlükler & Birimler</h2>
+                <h2 class="org-section-title">Koordinatörlükler &amp; Birimler</h2>
                 <div class="units-wrapper">
-                    @foreach(var b in birimler) {
+                    @foreach (var b in birimler)
+                    {
+                        @* Birime bağlı olanlar (hiyerarşi 4) + yönetimdeki kişiler (hiyerarşi 1-3) birimde de görünsün *@
+                        var birimUyeleri = Model.Where(e => e.EkipBirimiId == b.Id).ToList();
                         <div class="unit-column">
-                            <!-- Unit Header -->
                             <div class="unit-header-card">
                                 <div class="icon-box"><i class="@(string.IsNullOrEmpty(b.Icon) ? "fas fa-users" : b.Icon)"></i></div>
                                 <div class="unit-info">
@@ -107,13 +138,25 @@
                                     <p>@b.Aciklama</p>
                                 </div>
                             </div>
-                            
-                            <!-- Unit Members -->
-                            @foreach(var personel in birimElemanlari.Where(e => e.EkipBirimiId == b.Id)) {
-                                <div class="org-node" style="width:100%; border-top:none; box-shadow:0 2px 10px rgba(0,0,0,0.03); padding:15px;">
-                                    @if(!string.IsNullOrEmpty(personel.FotografYolu)) { <img src="@personel.FotografYolu" alt="@personel.AdSoyad" style="width:70px; height:70px;"> } else { <i class="fas fa-user" style="width:70px; height:70px; line-height:70px; font-size:2rem; margin-bottom:10px;"></i> }
-                                    <h3 style="font-size:0.95rem;">@personel.AdSoyad</h3>
-                                    <p style="font-size:0.75rem;">@personel.Gorev</p>
+                            @if (birimUyeleri.Any())
+                            {
+                                @foreach (var personel in birimUyeleri)
+                                {
+                                    <a asp-controller="Kurumsal" asp-action="EkipDetay" asp-route-id="@personel.Id" class="unit-member-card">
+                                        @if (!string.IsNullOrEmpty(personel.FotografYolu))
+                                        { <img src="@personel.FotografYolu" alt="@personel.AdSoyad"> }
+                                        else { <div class="ava"><i class="fas fa-user"></i></div> }
+                                        <div class="info">
+                                            <h5>@personel.AdSoyad</h5>
+                                            <p>@personel.Gorev</p>
+                                        </div>
+                                    </a>
+                                }
+                            }
+                            else
+                            {
+                                <div style="padding:14px 16px; background:#fff; border-radius:12px; color:#94a3b8; font-size:0.85rem; text-align:center;">
+                                    Henüz üye atanmadı
                                 </div>
                             }
                         </div>

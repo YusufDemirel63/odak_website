@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OdakMVC.Data;
 
@@ -13,6 +13,19 @@ namespace OdakMVC.Controllers
         {
             var egitimler = await _context.Egitimler.Where(e => e.Aktif).OrderBy(e => e.Sira).ToListAsync();
             return View(egitimler);
+        }
+
+        public async Task<IActionResult> Detay(int id)
+        {
+            var egitim = await _context.Egitimler.FindAsync(id);
+            if (egitim == null || !egitim.Aktif) return NotFound();
+            var digerler = await _context.Egitimler
+                .Where(e => e.Aktif && e.Id != id)
+                .OrderBy(e => e.Sira)
+                .Take(3)
+                .ToListAsync();
+            ViewBag.DigerEgitimler = digerler;
+            return View(egitim);
         }
     }
 }

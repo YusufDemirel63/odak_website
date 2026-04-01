@@ -1,4 +1,4 @@
-﻿@model List<Egitim>
+@model List<Egitim>
 @{
     ViewData["Title"] = "Egitimler";
 }
@@ -10,7 +10,7 @@
             <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:25px; margin-top:30px;">
                 @foreach (var egitim in Model)
                 {
-                    <div class="course-card-new">
+                    <a asp-action="Detay" asp-route-id="@egitim.Id" class="course-card-new" style="display:block; text-decoration:none; color:inherit;">
                         <div class="course-card-image">
                             @if (!string.IsNullOrEmpty(egitim.GorselYolu))
                             {
@@ -33,7 +33,7 @@
                         <div class="course-card-footer">
                             <h3>@egitim.Baslik</h3>
                         </div>
-                    </div>
+                    </a>
                 }
             </div>
         }

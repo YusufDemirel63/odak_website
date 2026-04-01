@@ -191,3 +191,27 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', updateCoursesCarousel);
     updateCoursesCarousel();
 });
+
+/* Mobil Dropdown Menu Icin Click Event'i (Sonradan eklenen iyilestirme) */
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.innerWidth <= 991) {
+        const dropdownLinks = document.querySelectorAll('.nav-item.dropdown > .nav-link');
+        
+        dropdownLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const parentItem = link.parentElement;
+                
+                // Diger acik olanlari kapat
+                document.querySelectorAll('.nav-item.dropdown').forEach(item => {
+                    if (item !== parentItem) {
+                        item.classList.remove('mobile-active');
+                    }
+                });
+                
+                // Tiklanani ac/kapat
+                parentItem.classList.toggle('mobile-active');
+            });
+        });
+    }
+});

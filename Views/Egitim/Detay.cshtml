@@ -1,0 +1,132 @@
+@model OdakMVC.Models.Entities.Egitim
+@{
+    ViewData["Title"] = Model.Baslik;
+    var digerEgitimler = ViewBag.DigerEgitimler as List<OdakMVC.Models.Entities.Egitim>;
+}
+
+<style>
+    .edu-header {
+        background: linear-gradient(rgba(0,48,84,0.9), rgba(0,48,84,0.95)), url('@(Model.GorselYolu ?? "/gorseller/sliders/1.png")');
+        background-size: cover;
+        background-position: center;
+        padding: 80px 0;
+        color: #fff;
+    }
+    .edu-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        padding: 40px;
+        margin-top: -60px;
+        position: relative;
+        z-index: 10;
+        margin-bottom: 60px;
+    }
+    .edu-meta {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+    .edu-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #f8fafc;
+        padding: 12px 20px;
+        border-radius: 12px;
+        color: #475569;
+        font-weight: 500;
+    }
+    .edu-meta-item i {
+        color: var(--primary-color);
+        font-size: 1.2rem;
+    }
+    .edu-content {
+        font-size: 1.08rem;
+        line-height: 1.9;
+        color: #334155;
+    }
+    .edu-content h2, .edu-content h3 {
+        color: var(--secondary-color);
+        margin-top: 30px;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="edu-header">
+    <div class="container">
+        <a asp-action="Index" style="color: rgba(255,255,255,0.7); text-decoration: none; margin-bottom: 20px; display: inline-block;"><i class="fas fa-arrow-left"></i> Eğitimlere Dön</a>
+        <h1 style="font-size: 2.5rem; margin-bottom: 15px;">@Model.Baslik</h1>
+        @if (!string.IsNullOrEmpty(Model.Aciklama))
+        {
+            <p style="font-size: 1.1rem; color: rgba(255,255,255,0.8); max-width: 800px;">@Model.Aciklama</p>
+        }
+    </div>
+</div>
+
+<div class="container">
+    <div class="edu-card">
+        <div class="edu-meta">
+            @if (!string.IsNullOrEmpty(Model.Egitmen))
+            {
+                <div class="edu-meta-item">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span><strong>Eğitmen:</strong> @Model.Egitmen</span>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.Seviye))
+            {
+                <div class="edu-meta-item">
+                    <i class="fas fa-layer-group"></i>
+                    <span><strong>Seviye:</strong> @Model.Seviye</span>
+                </div>
+            }
+        </div>
+
+        <div class="edu-content">
+            @if (!string.IsNullOrEmpty(Model.Detay))
+            {
+                @Html.Raw(Model.Detay.Replace("\n", "<br/>"))
+            }
+            else if (!string.IsNullOrEmpty(Model.Aciklama))
+            {
+                @Html.Raw(Model.Aciklama.Replace("\n", "<br/>"))
+            }
+            else
+            {
+                <p>Bu eğitim için henüz detaylı bir açıklama girilmemiştir.</p>
+            }
+        </div>
+    </div>
+
+    @if (digerEgitimler != null && digerEgitimler.Any())
+    {
+        <div style="margin-bottom: 60px;">
+            <h3 style="color: var(--secondary-color); margin-bottom: 30px; font-size: 1.8rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px;">Diğer Eğitimler</h3>
+            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:25px;">
+                @foreach (var egitim in digerEgitimler)
+                {
+                    <a asp-action="Detay" asp-route-id="@egitim.Id" class="course-card-new" style="display:block; text-decoration:none; color:inherit;">
+                        <div class="course-card-image">
+                            @if (!string.IsNullOrEmpty(egitim.GorselYolu))
+                            {
+                                <img src="@egitim.GorselYolu" alt="@egitim.Baslik">
+                            }
+                            <div class="course-title-overlay">
+                                @if (!string.IsNullOrEmpty(egitim.Seviye))
+                                {
+                                    <span class="course-tag">@egitim.Seviye.ToUpper()</span>
+                                }
+                                <h4>@egitim.Baslik.ToUpper()</h4>
+                            </div>
+                        </div>
+                        <div class="course-card-footer">
+                            <h3>@egitim.Baslik</h3>
+                        </div>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+</div>

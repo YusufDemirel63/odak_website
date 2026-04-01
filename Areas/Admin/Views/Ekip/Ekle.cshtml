@@ -1,65 +1,112 @@
 @model EkipUyesi
-@{ViewData["Title"] = Model.Id==0?"Uye Ekle":"Uye Duzenle"; var isEdit=Model.Id!=0;}
+@{ ViewData["Title"] = Model.Id == 0 ? "Yeni Üye Ekle" : "Üye Düzenle"; var isEdit = Model.Id != 0; }
 <div class="admin-card">
     <div class="admin-card-header">
         <h3><i class="fas fa-user-plus" style="color:var(--admin-accent);"></i> @ViewData["Title"]</h3>
         <a asp-action="Index" class="btn-admin btn-admin-edit"><i class="fas fa-arrow-left"></i> Geri</a>
     </div>
-    <form asp-action="@(isEdit?"Duzenle":"Ekle")" method="post" enctype="multipart/form-data" class="admin-form">
+    <form asp-action="@(isEdit ? "Duzenle" : "Ekle")" method="post" enctype="multipart/form-data" class="admin-form" id="ekipForm">
         @Html.AntiForgeryToken()
         <div asp-validation-summary="All" class="text-danger" style="margin-bottom:15px; padding:10px; background:#ffebee; color:#c62828; border-radius:5px;"></div>
-        @if(isEdit){<input type="hidden" asp-for="Id">}
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
-            <div class="form-group"><label>Ad Soyad *</label><input asp-for="AdSoyad"></div>
-            <div class="form-group"><label>Görev</label><input asp-for="Gorev" placeholder="Kulüp Başkanı, Üye..."></div>
+        @if (isEdit) { <input type="hidden" asp-for="Id"> }
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
             <div class="form-group">
-                <label asp-for="HiyerarsiKademesi" class="control-label"></label>
+                <label>Ad Soyad *</label>
+                <input asp-for="AdSoyad" placeholder="Ad Soyad">
+                <span asp-validation-for="AdSoyad" style="color:red;font-size:0.8rem;"></span>
+            </div>
+            <div class="form-group">
+                <label>Görev</label>
+                <input asp-for="Gorev" placeholder="Kulüp Başkanı, Üye...">
+            </div>
+            <div class="form-group">
+                <label asp-for="HiyerarsiKademesi" class="control-label">Hiyerarşi Kademesi</label>
                 <select asp-for="HiyerarsiKademesi" class="form-control" id="HiyerarsiKademesi">
                     <option value="1">Başkanlık (Tek Kart)</option>
-                    <option value="2">Bşk. Yrd / Genel Sekreter</option>
+                    <option value="2">Başkan Yrd / Genel Sekreter</option>
                     <option value="3">Yönetim Kurulu</option>
-                    <option value="4" selected>Birim Personeli</option>
+                    <option value="4">Birim Personeli</option>
                 </select>
-                <span asp-validation-for="HiyerarsiKademesi" class="text-danger"></span>
             </div>
             <div class="form-group" id="birimSecimiContainer">
-                <label asp-for="EkipBirimiId" class="control-label"></label>
+                <label>Bağlı Birim</label>
                 <select asp-for="EkipBirimiId" class="form-control" id="EkipBirimiId">
-                    <option value="">-- Birim Seç--</option>
-                    @if(ViewBag.Birimler != null) {
-                        foreach(var b in ViewBag.Birimler) {
+                    <option value="">-- Birim Seçin --</option>
+                    @if (ViewBag.Birimler != null)
+                    {
+                        foreach (var b in ViewBag.Birimler)
+                        {
                             <option value="@b.Id">@b.Ad</option>
                         }
                     }
                 </select>
             </div>
-            <div class="form-group"><label>Sıra</label><input asp-for="Sira" type="number" min="0"></div>
-            <div class="form-group"><label>E-posta</label><input asp-for="Email" type="email"></div>
-            <div class="form-group"><label>LinkedIn URL</label><input asp-for="LinkedInUrl" type="url"></div>
-            <div class="form-group"><label>Twitter URL</label><input asp-for="TwitterUrl" type="url"></div>
+            <div class="form-group">
+                <label>Sıra</label>
+                <input asp-for="Sira" type="number" min="0">
+            </div>
+            <div class="form-group">
+                <label>E-posta</label>
+                <input asp-for="Email" type="email" placeholder="iletisim@ornek.com">
+            </div>
         </div>
-        <div class="form-group"><label>Fotoğraf</label><input type="file" name="fotografFile" accept="image/*">
-            @if(!string.IsNullOrEmpty(Model.FotografYolu)){<img src="@Model.FotografYolu" style="height:60px;margin-top:8px;border-radius:50%;"><input type="hidden" asp-for="FotografYolu">}
+        <div class="form-group">
+            <label>Hakkında <small style="color:#888;font-weight:400;">(Kişinin biyografisi, deneyimleri)</small></label>
+            <textarea asp-for="Hakkinda" placeholder="Kişi hakkında kısa bilgi yazın..." style="min-height:120px;"></textarea>
         </div>
-        <div class="form-group" style="display:flex;align-items:center;gap:10px;"><input asp-for="Aktif" type="checkbox" style="width:auto;margin:0;"><label asp-for="Aktif" style="margin:0;">Aktif</label></div>
-        <button type="submit" class="btn-admin btn-admin-primary" style="padding:12px 30px;font-size:1rem;"><i class="fas fa-save"></i> @(isEdit?"Guncelle":"Kaydet")</button>
+        <div class="form-group">
+            <label>Fotoğraf <small style="color:#888; font-weight:400;">(Maks. 10MB — JPG, PNG, WEBP)</small></label>
+            <input type="file" name="fotografFile" accept="image/*" id="fotografFileInput" onchange="onDosyaSec(this)">
+            <div id="dosyaBoyutuUyari" style="color:#c62828; font-size:0.85rem; margin-top:5px; display:none;">
+                ⚠️ Seçilen dosya 10MB sınırını aşıyor!
+            </div>
+            @if (!string.IsNullOrEmpty(Model.FotografYolu))
+            {
+                <div style="margin-top:10px; display:flex; align-items:center; gap:12px;">
+                    <img src="@Model.FotografYolu" style="height:70px; width:70px; border-radius:50%; object-fit:cover; border:2px solid #e2e8f0;">
+                    <small style="color:#6c757d;">Mevcut fotoğraf — yeni seçilirse değişir</small>
+                </div>
+                <input type="hidden" asp-for="FotografYolu">
+            }
+        </div>
+        <div class="form-group" style="display:flex; align-items:center; gap:10px;">
+            <input asp-for="Aktif" type="checkbox" style="width:auto; margin:0;">
+            <label asp-for="Aktif" style="margin:0;">Aktif</label>
+        </div>
+        <button type="submit" class="btn-admin btn-admin-primary" id="submitBtn" style="padding:12px 30px; font-size:1rem;">
+            <i class="fas fa-save"></i> @(isEdit ? "Güncelle" : "Kaydet")
+        </button>
     </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
     <script>
-        document.getElementById('HiyerarsiKademesi').addEventListener('change', function() {
+        document.getElementById('HiyerarsiKademesi').addEventListener('change', function () {
             var val = this.value;
             var container = document.getElementById('birimSecimiContainer');
-            if(val == '4') {
-                container.style.display = 'block';
-            } else {
-                container.style.display = 'none';
-                document.getElementById('EkipBirimiId').value = '';
-            }
+            container.style.display = (val == '4') ? 'block' : 'none';
+            if (val != '4') document.getElementById('EkipBirimiId').value = '';
         });
         document.getElementById('HiyerarsiKademesi').dispatchEvent(new Event('change'));
+
+        function onDosyaSec(input) {
+            var uyari = document.getElementById('dosyaBoyutuUyari');
+            var btn = document.getElementById('submitBtn');
+            var maxBoyut = 10 * 1024 * 1024;
+            if (input.files && input.files[0] && input.files[0].size > maxBoyut) {
+                uyari.style.display = 'block';
+                btn.disabled = true;
+            } else {
+                uyari.style.display = 'none';
+                btn.disabled = false;
+            }
+        }
+
+        document.getElementById('ekipForm').addEventListener('submit', function () {
+            var btn = document.getElementById('submitBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Kaydediliyor...';
+            btn.disabled = true;
+        });
     </script>
 }
-

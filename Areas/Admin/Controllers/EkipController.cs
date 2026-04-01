@@ -9,23 +9,30 @@ namespace OdakMVC.Areas.Admin.Controllers
     {
         private readonly OdakDbContext _context;
         private readonly IWebHostEnvironment _env;
+        private const long MaxDosyaBoyutu = 10 * 1024 * 1024; // 10 MB
+
         public EkipController(OdakDbContext context, IWebHostEnvironment env)
         { _context = context; _env = env; }
 
         public async Task<IActionResult> Index()
             => View(await _context.EkipUyeleri.Include(e => e.EkipBirimi).OrderBy(e => e.HiyerarsiKademesi).ThenBy(e => e.Sira).ToListAsync());
 
-        public async Task<IActionResult> Ekle() 
-        { 
-            ViewBag.Birimler = await _context.EkipBirimleri.ToListAsync(); 
-            return View(new EkipUyesi()); 
+        public async Task<IActionResult> Ekle()
+        {
+            ViewBag.Birimler = await _context.EkipBirimleri.ToListAsync();
+            return View(new EkipUyesi());
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Ekle(EkipUyesi model, IFormFile? fotografFile)
         {
-            ModelState.Remove("EkipBirimi"); // Ignore navigation property validation
-            if (!ModelState.IsValid) {
+            ModelState.Remove("EkipBirimi");
+            if (fotografFile != null && fotografFile.Length > MaxDosyaBoyutu)
+            {
+                ModelState.AddModelError("", "Fotoğraf boyutu 10MB'dan küçük olmalıdır.");
+            }
+            if (!ModelState.IsValid)
+            {
                 ViewBag.Birimler = await _context.EkipBirimleri.ToListAsync();
                 return View(model);
             }
@@ -34,7 +41,7 @@ namespace OdakMVC.Areas.Admin.Controllers
 
             _context.EkipUyeleri.Add(model);
             await _context.SaveChangesAsync();
-            TempData["Mesaj"] = "Ekip uyesi eklendi.";
+            TempData["Mesaj"] = "Ekip üyesi başarıyla eklendi.";
             return RedirectToAction("Index");
         }
 
@@ -49,8 +56,13 @@ namespace OdakMVC.Areas.Admin.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Duzenle(EkipUyesi model, IFormFile? fotografFile)
         {
-            ModelState.Remove("EkipBirimi"); // Ignore navigation property validation
-            if (!ModelState.IsValid) {
+            ModelState.Remove("EkipBirimi");
+            if (fotografFile != null && fotografFile.Length > MaxDosyaBoyutu)
+            {
+                ModelState.AddModelError("", "Fotoğraf boyutu 10MB'dan küçük olmalıdır.");
+            }
+            if (!ModelState.IsValid)
+            {
                 ViewBag.Birimler = await _context.EkipBirimleri.ToListAsync();
                 return View(model);
             }
@@ -59,7 +71,7 @@ namespace OdakMVC.Areas.Admin.Controllers
 
             _context.EkipUyeleri.Update(model);
             await _context.SaveChangesAsync();
-            TempData["Mesaj"] = "Ekip uyesi guncellendi.";
+            TempData["Mesaj"] = "Ekip üyesi başarıyla güncellendi.";
             return RedirectToAction("Index");
         }
 
@@ -68,7 +80,7 @@ namespace OdakMVC.Areas.Admin.Controllers
         {
             var u = await _context.EkipUyeleri.FindAsync(id);
             if (u != null) { _context.EkipUyeleri.Remove(u); await _context.SaveChangesAsync(); }
-            TempData["Mesaj"] = "Ekip uyesi silindi.";
+            TempData["Mesaj"] = "Ekip üyesi silindi.";
             return RedirectToAction("Index");
         }
 
@@ -84,4 +96,3 @@ namespace OdakMVC.Areas.Admin.Controllers
         }
     }
 }
-

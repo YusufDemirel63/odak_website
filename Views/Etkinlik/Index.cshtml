@@ -1,4 +1,4 @@
-﻿@model List<Etkinlik>
+@model List<Etkinlik>
 @{
     ViewData["Title"] = "Etkinlikler";
     var ilkEtkinlik = Model.FirstOrDefault();
@@ -22,7 +22,7 @@
                                 @if (etkinlik.Tarih.HasValue)
                                 {
                                     <span class="day">@etkinlik.Tarih.Value.Day</span>
-                                    <span class="month">@etkinlik.Tarih.Value.ToString("MMM")</span>
+                                    <span class="month">@etkinlik.Tarih.Value.ToString("MMMM", new System.Globalization.CultureInfo("tr-TR")).Substring(0, 3).ToUpper()</span>
                                 }
                                 else { <span class="day">?</span><span class="month">Tarih</span> }
                             </div>

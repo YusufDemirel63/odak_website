@@ -1,28 +1,89 @@
-﻿@model Egitim
-@{ViewData["Title"] = Model.Id == 0 ? "Yeni Egitim" : "Egitim Duzenle"; var isEdit = Model.Id != 0;}
+@model Egitim
+@{ ViewData["Title"] = Model.Id == 0 ? "Yeni Eğitim Ekle" : "Eğitimi Düzenle"; var isEdit = Model.Id != 0; }
 <div class="admin-card">
     <div class="admin-card-header">
         <h3><i class="fas fa-graduation-cap" style="color:var(--admin-accent);"></i> @ViewData["Title"]</h3>
         <a asp-action="Index" class="btn-admin btn-admin-edit"><i class="fas fa-arrow-left"></i> Geri</a>
     </div>
-    <form asp-action="@(isEdit ? "Duzenle" : "Ekle")" method="post" enctype="multipart/form-data" class="admin-form">
+    <form asp-action="@(isEdit ? "Duzenle" : "Ekle")" method="post" enctype="multipart/form-data" class="admin-form" id="egitimForm">
         @Html.AntiForgeryToken()
         <div asp-validation-summary="All" class="text-danger" style="margin-bottom:15px; padding:10px; background:#ffebee; color:#c62828; border-radius:5px;"></div>
         @if (isEdit) { <input type="hidden" asp-for="Id"> <input type="hidden" asp-for="OlusturulmaTarihi"> }
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
-            <div class="form-group"><label>Baslik *</label><input asp-for="Baslik" placeholder="Egitim adi"></div>
-            <div class="form-group"><label>Egitmen</label><input asp-for="Egitmen" placeholder="Egitmen adi"></div>
-            <div class="form-group"><label>Seviye</label>
-                <select asp-for="Seviye"><option value="">Secin</option><option>Baslangic</option><option>Orta</option><option>Ileri</option></select>
+            <div class="form-group">
+                <label>Başlık *</label>
+                <input asp-for="Baslik" placeholder="Eğitim adı">
+                <span asp-validation-for="Baslik" style="color:red;font-size:0.8rem;"></span>
             </div>
-            <div class="form-group"><label>Sira</label><input asp-for="Sira" type="number" min="0"></div>
+            <div class="form-group">
+                <label>Eğitmen</label>
+                <input asp-for="Egitmen" placeholder="Eğitmen adı soyadı">
+            </div>
+            <div class="form-group">
+                <label>Seviye</label>
+                <select asp-for="Seviye">
+                    <option value="">Seçin</option>
+                    <option>Başlangıç</option>
+                    <option>Orta</option>
+                    <option>İleri</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Sıra</label>
+                <input asp-for="Sira" type="number" min="0">
+            </div>
         </div>
-        <div class="form-group"><label>Aciklama</label><textarea asp-for="Aciklama"></textarea></div>
-        <div class="form-group"><label>Gorsel</label><input type="file" name="gorselFile" accept="image/*">
-            @if (!string.IsNullOrEmpty(Model.GorselYolu)) { <img src="@Model.GorselYolu" style="height:60px;margin-top:8px;border-radius:4px;"> <input type="hidden" asp-for="GorselYolu"> }
+        <div class="form-group">
+            <label>Kısa Açıklama <small style="color:#888;font-weight:400;">(Liste sayfasında görünür)</small></label>
+            <textarea asp-for="Aciklama" placeholder="Eğitim hakkında kısa açıklama..." style="min-height:80px;"></textarea>
         </div>
-        <div class="form-group" style="display:flex;align-items:center;gap:10px;"><input asp-for="Aktif" type="checkbox" style="width:auto;margin:0;"><label asp-for="Aktif" style="margin:0;">Aktif</label></div>
-        <button type="submit" class="btn-admin btn-admin-primary" style="padding:12px 30px;font-size:1rem;"><i class="fas fa-save"></i> @(isEdit ? "Guncelle" : "Kaydet")</button>
+        <div class="form-group">
+            <label>Detaylı Açıklama <small style="color:#888;font-weight:400;">(Eğitim detay sayfasında görünür)</small></label>
+            <textarea asp-for="Detay" placeholder="Eğitim içeriği, hedef kitle, konular hakkında ayrıntılı bilgi..." style="min-height:160px;"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Görsel <small style="color:#888; font-weight:400;">(Maks. 10MB — JPG, PNG, WEBP)</small></label>
+            <input type="file" name="gorselFile" accept="image/*" id="gorselFileInput" onchange="onDosyaSec(this)">
+            <div id="dosyaBoyutuUyari" style="color:#c62828; font-size:0.85rem; margin-top:5px; display:none;">
+                ⚠️ Seçilen dosya 10MB sınırını aşıyor!
+            </div>
+            @if (!string.IsNullOrEmpty(Model.GorselYolu))
+            {
+                <div style="margin-top:10px; display:flex; align-items:center; gap:12px;">
+                    <img src="@Model.GorselYolu" style="height:70px; border-radius:6px; object-fit:cover; border:1px solid #e2e8f0;">
+                    <small style="color:#6c757d;">Mevcut görsel — yeni seçilirse değişir</small>
+                </div>
+                <input type="hidden" asp-for="GorselYolu">
+            }
+        </div>
+        <div class="form-group" style="display:flex; align-items:center; gap:10px;">
+            <input asp-for="Aktif" type="checkbox" style="width:auto; margin:0;">
+            <label asp-for="Aktif" style="margin:0;">Aktif</label>
+        </div>
+        <button type="submit" class="btn-admin btn-admin-primary" id="submitBtn" style="padding:12px 30px; font-size:1rem;">
+            <i class="fas fa-save"></i> @(isEdit ? "Güncelle" : "Kaydet")
+        </button>
     </form>
 </div>
 
+@section Scripts {
+    <script>
+        function onDosyaSec(input) {
+            var uyari = document.getElementById('dosyaBoyutuUyari');
+            var btn = document.getElementById('submitBtn');
+            var maxBoyut = 10 * 1024 * 1024;
+            if (input.files && input.files[0] && input.files[0].size > maxBoyut) {
+                uyari.style.display = 'block';
+                btn.disabled = true;
+            } else {
+                uyari.style.display = 'none';
+                btn.disabled = false;
+            }
+        }
+        document.getElementById('egitimForm').addEventListener('submit', function () {
+            var btn = document.getElementById('submitBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Kaydediliyor...';
+            btn.disabled = true;
+        });
+    </script>
+}

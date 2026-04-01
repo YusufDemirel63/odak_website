@@ -18,6 +18,12 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// Response Compression
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+});
+
 var app = builder.Build();
 
 // DB otomatik olustur ve migrate et
@@ -34,21 +40,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-// Docker ilk baslatildiginda otomatik Update-Database (Migration)
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<OdakMVC.Data.OdakDbContext>();
-        context.Database.Migrate();
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Veritabani migration veya seed islemi sirasinda bir hata eklendi.");
-    }
-}
+app.UseResponseCompression();
 
 app.UseStaticFiles(new StaticFileOptions
 {

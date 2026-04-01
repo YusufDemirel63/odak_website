@@ -53,7 +53,7 @@
                                 @if (etkinlik.Tarih.HasValue)
                                 {
                                     <span class="day">@etkinlik.Tarih.Value.Day</span>
-                                    <span class="month">@etkinlik.Tarih.Value.ToString("MMM")</span>
+                                    <span class="month">@etkinlik.Tarih.Value.ToString("MMMM", new System.Globalization.CultureInfo("tr-TR")).Substring(0, 3).ToUpper()</span>
                                 }
                                 else
                                 {
@@ -84,6 +84,56 @@
         </div>
     </div>
 </section>
+
+<!-- EĞİTİMLER (YENİ EKLENEN) -->
+@if (Model.SonEgitimler != null && Model.SonEgitimler.Any())
+{
+    <section class="events-section" style="background:#f8fafc;">
+        <div class="container">
+            <div class="section-title"><h2>Son Eğitimler</h2></div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:25px;">
+                @foreach (var egitim in Model.SonEgitimler)
+                {
+                    <a asp-controller="Egitim" asp-action="Detay" asp-route-id="@egitim.Id" class="course-card-new" style="display:block; text-decoration:none; color:inherit;">
+                        <div class="course-card-image">
+                            @if (!string.IsNullOrEmpty(egitim.GorselYolu))
+                            {
+                                <img src="@egitim.GorselYolu" alt="@egitim.Baslik" loading="lazy">
+                            }
+                            @if (!string.IsNullOrEmpty(egitim.Egitmen))
+                            {
+                                <div class="course-overlay">
+                                    <span class="instructor-badge"><i class="fas fa-play"></i> @egitim.Egitmen ile</span>
+                                </div>
+                            }
+                            <div class="course-title-overlay">
+                                @if (!string.IsNullOrEmpty(egitim.Seviye))
+                                {
+                                    <span class="course-tag">@egitim.Seviye.ToUpper()</span>
+                                }
+                                <h4>@egitim.Baslik.ToUpper()</h4>
+                            </div>
+                        </div>
+                        <div class="course-card-footer">
+                            <h3 style="font-size:1.1rem; color:var(--secondary-color); margin-bottom:5px;">@egitim.Baslik</h3>
+                            @if (!string.IsNullOrEmpty(egitim.Aciklama))
+                            {
+                                <p style="font-size:0.9rem; color:#64748b; margin:0;">
+                                    @(egitim.Aciklama.Length > 80 ? egitim.Aciklama.Substring(0, 80) + "..." : egitim.Aciklama)
+                                </p>
+                            }
+                        </div>
+                    </a>
+                }
+            </div>
+            <div class="section-footer">
+                <a asp-controller="Egitim" asp-action="Index" class="btn-secondary" id="tum-etkinlikbtn">
+                    Tüm Eğitimler <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+}
 
 <!-- NEDEN ODAK -->
 <section class="features">
